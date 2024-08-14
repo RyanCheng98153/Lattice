@@ -1,5 +1,5 @@
 from enum import Enum
-from src.helper import Helper
+from src.helper import PrintHelper
 
 class Spin(Enum):
     UP = 1
@@ -30,32 +30,32 @@ class Node:
         [btm] - [ br]
         '''
         
-        str1 = Helper.getPrettyId(self.id)
+        str1 = PrintHelper.getPrettyId(self.id)
         str2 = ''
         str3 = ''
         # self and right node
         if self.right != None:
             str1 += ' - ' 
-            if printMode: str1 += Helper.getPrettyId(self.right.id)
+            if printMode: str1 += PrintHelper.getPrettyId(self.right.id)
         else:
             str1 += '   ' 
-            if printMode: str1 += Helper.getPrettyId(None)
+            if printMode: str1 += PrintHelper.getPrettyId(None)
         # bottom node
         if self.bottom != None:
             str2 += '  |  '
-            if printMode: str3 += Helper.getPrettyId(self.bottom.id)
+            if printMode: str3 += PrintHelper.getPrettyId(self.bottom.id)
         else:
             str2 += '     '
-            if printMode: str3 += Helper.getPrettyId(None)
+            if printMode: str3 += PrintHelper.getPrettyId(None)
         # bottomRight node
         if self.bottomRight != None:
             str2 += ' \ ' 
             if printMode: str2 += '     '
-            if printMode: str3 += '   ' + Helper.getPrettyId(self.bottomRight.id)
+            if printMode: str3 += '   ' + PrintHelper.getPrettyId(self.bottomRight.id)
         else:
             str2 += '   ' 
             if printMode: str2 += '     '
-            if printMode: str3 += '   ' + Helper.getPrettyId(None)
+            if printMode: str3 += '   ' + PrintHelper.getPrettyId(None)
         # decide whether to print or not
         if printMode:
             print(str1)

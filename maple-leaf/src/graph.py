@@ -1,5 +1,5 @@
 from src.node import Node
-from src.helper import Helper
+from src.helper import PrintHelper, NodeHelper
 from typing import List
 
 class MLGraph:
@@ -8,7 +8,7 @@ class MLGraph:
         self.W = _W
         self.nodes      :List[Node] = [Node(i) for i in range(0, _L*_W)]
         self.hexInit    :int = _hexInit
-        self.helper     :Helper = Helper(_L, _W)
+        self.helper     :NodeHelper = NodeHelper(_L, _W)
     
     def getIdentify(self, _id):
         i, j = self.helper.getCood(_id)
@@ -44,7 +44,7 @@ class MLGraph:
         printStr2 = ''
         for index, node in enumerate(self.nodes):
             if node == None:
-                printStr1 += ( Helper.getPrettyId(None) + '   '  )
+                printStr1 += ( PrintHelper.getPrettyId(None) + '   '  )
                 printStr2 += ( '     ' + '   '  )
             else:
                 tmp1, tmp2 = node.printNodeVisual(False)

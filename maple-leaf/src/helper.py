@@ -1,4 +1,4 @@
-class Helper:
+class NodeHelper:
     def __init__(self, _L:int, _W:int):
         self.L:int = _L
         self.W:int = _W
@@ -20,6 +20,10 @@ class Helper:
     def getBottomRight(self, _id):
         i, j = self.getCood(_id)
         return self.getId( (i+1) % self.L, (j+1) % self.W )
+
+class PrintHelper:
+    def __init__(self) -> None:
+        pass
     
     @staticmethod
     def getPrettyId( _id ):
