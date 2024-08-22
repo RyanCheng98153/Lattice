@@ -3,17 +3,20 @@ from src.graph import MLGraph
 from src.helper import PrintHelper, NodeHelper
     
 def main():
-    L = int(sys.argv[1])
-    W = int(sys.argv[2])
-    hexInit = int(sys.argv[3])
+    L:int = int(sys.argv[1])
+    W:int = int(sys.argv[2])
+    
+    hexInit:int = 0
+    if (len(sys.argv) > 3):
+        hexInit = int(sys.argv[3])
     
     graph = MLGraph(L, W, hexInit)
     graph.makeGraph()
-    # graph.printGraphText()
-    graph.printGraphVisual()
-    # checkSingleNode(graph)
+    graph.printGraphText()
+    # graph.printGraphVisual()
+    # checkIsingleNode(graph)
     
-def checkSingleNode( _graph: MLGraph ):
+def checkIsingleNode( _graph: MLGraph ):
     helper = NodeHelper(_graph.L, _graph.W)
     n = 0
     while(n >= 0):
