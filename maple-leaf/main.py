@@ -18,8 +18,7 @@ def main():
     # graph.printGraphText()
     # graph.printGraphVisual()
     # checkIsingleNode(graph)
-    # visualize(graph)
-    visualizeTriangular(graph)
+    visualize(graph)
     
 def visualizeTriangular( _graph: MLGraph ):
     G = nx.empty_graph( n=0 )
@@ -42,7 +41,6 @@ def visualizeTriangular( _graph: MLGraph ):
     plt.show() 
     
 def visualize( _graph: MLGraph ):
-    helper = NodeHelper(_graph.L, _graph.W)
     adjList = []
     
     for srcNode in _graph.nodes:
@@ -52,26 +50,51 @@ def visualize( _graph: MLGraph ):
             if adjNode == None:
                 continue
             adjList.append([srcNode.id, adjNode.id])
+    # print(adjList)
     
-    print(adjList)
-    
-    def get_id_pos (_id):
+    def getPosition (_id):
         y, x = _id // _graph.W, _id % _graph.W
         y = _graph.L-1-y
-        return x, y
+        return (x, y)
     
     G = nx.empty_graph( n=0 )
     # exists nodes
-    G.add_nodes_from((i, j) for i in range(_graph.W) for j in range(_graph.L))
+    # G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
+    G.add_nodes_from( getPosition( id ) for id in range(len(_graph.nodes)) )
     nodelist = copy.deepcopy(G.nodes())
+    # add edges from adjList
+    edgesList = []
+    for srcId, adjId in adjList:
+        # right button periodic
+        if srcId == len(_graph.nodes) -1 and adjId == 0:
+            edgesList.append((getPosition(srcId), (_graph.W, -1) ))
+            continue
+        
+        # right periodic column
+        if (srcId+1) % _graph.W == 0 and adjId % _graph.W == 0:
+            adjX, adjY = getPosition(adjId)
+            edgesList.append((getPosition(srcId), (_graph.W, adjY) ))
+            continue
+        
+        # bottom periodic row
+        if srcId // _graph.W == _graph.L-1 and adjId // _graph.W == 0:
+            adjX, adjY = getPosition(adjId)
+            edgesList.append((getPosition(srcId), (adjX, -1) ))
+            continue
+        edgesList.append((getPosition(srcId), getPosition(adjId)))
+    
+    # add the edges to the graph
+    G.add_edges_from( edgesList )
+    
     
     pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
-    labels = dict( ((i, j), i + (_graph.L-1-j) * _graph.W ) for i, j in nodelist )
+    labels = dict( ((i, j), index) for index, (i, j) in enumerate(nodelist) )
     # print(labels)
-    nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=10)
-    # nx.draw_networkx(G) 
+    
+    # draw
+    # nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=200)
+    nx.draw(G, pos=pos, labels=labels,with_labels=True, node_size=200, node_color="orange")
     plt.show() 
-    # print(adjList)
     return adjList
 
 def checkIsingleNode( _graph: MLGraph ):
