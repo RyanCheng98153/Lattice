@@ -3,6 +3,7 @@ from src.graph import MLGraph
 from src.helper import PrintHelper, NodeHelper
 import networkx as nx
 import matplotlib.pyplot as plt
+import copy
     
 def main():
     L:int = int(sys.argv[1])
@@ -17,9 +18,31 @@ def main():
     # graph.printGraphText()
     # graph.printGraphVisual()
     # checkIsingleNode(graph)
-    visualize(graph)
+    # visualize(graph)
+    visualizeTriangular(graph)
+    
+def visualizeTriangular( _graph: MLGraph ):
+    G = nx.empty_graph( n=0 )
+    # exists nodes
+    G.add_nodes_from((i, j) for i in range(_graph.W) for j in range(_graph.L))
+    nodelist = copy.deepcopy(G.nodes())
+    # right
+    G.add_edges_from(((i, j), (i+1, j)) for i in range(_graph.W-1) for j in range(_graph.L))
+    # button
+    G.add_edges_from(((i, j), (i, j+1)) for i in range(_graph.W) for j in range(_graph.L-1))
+    
+    # button right
+    G.add_edges_from(((i, j), (i+1, j-1)) for i in range(_graph.W) for j in range(_graph.L))
+    
+    pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
+    labels = dict( ((i, j), i + (_graph.L-1-j) * _graph.W ) for i, j in nodelist )
+    # print(labels)
+    nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=10)
+    # nx.draw_networkx(G) 
+    plt.show() 
     
 def visualize( _graph: MLGraph ):
+    helper = NodeHelper(_graph.L, _graph.W)
     adjList = []
     
     for srcNode in _graph.nodes:
@@ -29,17 +52,23 @@ def visualize( _graph: MLGraph ):
             if adjNode == None:
                 continue
             adjList.append([srcNode.id, adjNode.id])
-
-    # G = nx.DiGraph()
-    # G.add_edges_from(adjList)
-
-    G=nx.grid_2d_graph(_graph.W,_graph.L)
+    
+    print(adjList)
+    
+    def get_id_pos (_id):
+        y, x = _id // _graph.W, _id % _graph.W
+        y = _graph.L-1-y
+        return x, y
+    
+    G = nx.empty_graph( n=0 )
+    # exists nodes
+    G.add_nodes_from((i, j) for i in range(_graph.W) for j in range(_graph.L))
+    nodelist = copy.deepcopy(G.nodes())
+    
     pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
-    labels = dict( ((i, j), i + (_graph.L-1-j) * _graph.W ) for i, j in G.nodes() )
-    print(f"labels: {labels}")
+    labels = dict( ((i, j), i + (_graph.L-1-j) * _graph.W ) for i, j in nodelist )
+    # print(labels)
     nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=10)
-    
-    
     # nx.draw_networkx(G) 
     plt.show() 
     # print(adjList)
