@@ -32,16 +32,10 @@ def visualize( _graph: MLGraph ):
 
     # G = nx.DiGraph()
     # G.add_edges_from(adjList)
-    # G = nx.grid_2d_graph(_graph.L, _graph.W)
-    # pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
-    # labels = dict( ((i, j), i + (_graph.L-1-j) * _graph.W ) for i, j in G.nodes() )
-    # nx.draw_networkx(G, pos=pos, labels=labels,with_labels=False, node_size=10)
-    N=7
-    G=nx.grid_2d_graph(N,N)
+
+    G=nx.grid_2d_graph(_graph.W,_graph.L)
     pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
-    labels = dict( ((i, j), i + (N-1-j) * N ) for i, j in G.nodes() )
-    print(f"G: {G}")
-    print(f"pos: {pos}")
+    labels = dict( ((i, j), i + (_graph.L-1-j) * _graph.W ) for i, j in G.nodes() )
     print(f"labels: {labels}")
     nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=10)
     
