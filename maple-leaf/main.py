@@ -24,7 +24,7 @@ def visualizeTriangular( _graph: MLGraph ):
     G = nx.empty_graph( n=0 )
     # exists nodes
     G.add_nodes_from((i, j) for i in range(_graph.W) for j in range(_graph.L))
-    nodelist = copy.deepcopy(G.nodes())
+    nodelist = deepcopy.deepcopy(G.nodes())
     # right
     G.add_edges_from(((i, j), (i+1, j)) for i in range(_graph.W-1) for j in range(_graph.L))
     # button
