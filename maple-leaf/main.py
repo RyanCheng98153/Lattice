@@ -3,7 +3,7 @@ from src.graph import MLGraph
 from src.helper import PrintHelper, NodeHelper
 import networkx as nx
 import matplotlib.pyplot as plt
-import copy
+from copy import deepcopy
     
 def main():
     L:int = int(sys.argv[1])
@@ -41,16 +41,6 @@ def visualizeTriangular( _graph: MLGraph ):
     plt.show() 
     
 def visualize( _graph: MLGraph ):
-    adjList = []
-    
-    for srcNode in _graph.nodes:
-        if srcNode == None:
-            continue
-        for adjNode in [srcNode.right, srcNode.bottom, srcNode.bottomRight]:
-            if adjNode == None:
-                continue
-            adjList.append([srcNode.id, adjNode.id])
-    # print(adjList)
     
     def getPosition (_id):
         y, x = _id // _graph.W, _id % _graph.W
@@ -58,24 +48,27 @@ def visualize( _graph: MLGraph ):
         return (x, y)
     
     G = nx.empty_graph( n=0 )
-    # exists nodes
-    # G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
-    G.add_nodes_from( getPosition( id ) for id in range(len(_graph.nodes)) )
-    nodelist = copy.deepcopy(G.nodes())
-    # add edges from adjList
+    
+    # add MLGraphs nodes without ignore the hexagon None nodes
+    # G.add_nodes_from( getPosition( id ) for id in range(len(_graph.nodes)) )
+    # ignore the hexagon None ndoes
+    G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
+    
+    nodelist = deepcopy(G.nodes()) # using deep copy not shallow copy because nx.network may return reference
+    
+    # get edgeList from adjList
     edgesList = []
-    for srcId, adjId in adjList:
+    
+    for srcId, adjId in _graph.getAdjList():
         # right button periodic
         if srcId == len(_graph.nodes) -1 and adjId == 0:
             edgesList.append((getPosition(srcId), (_graph.W, -1) ))
             continue
-        
         # right periodic column
         if (srcId+1) % _graph.W == 0 and adjId % _graph.W == 0:
             adjX, adjY = getPosition(adjId)
             edgesList.append((getPosition(srcId), (_graph.W, adjY) ))
             continue
-        
         # bottom periodic row
         if srcId // _graph.W == _graph.L-1 and adjId // _graph.W == 0:
             adjX, adjY = getPosition(adjId)
@@ -86,16 +79,14 @@ def visualize( _graph: MLGraph ):
     # add the edges to the graph
     G.add_edges_from( edgesList )
     
-    
     pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
-    labels = dict( ((i, j), index) for index, (i, j) in enumerate(nodelist) )
+    labels = dict( ((i, j), index) for index, (i, j) in enumerate(nodelist) ) #Add the labels to the nodes
     # print(labels)
     
     # draw
     # nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=200)
     nx.draw(G, pos=pos, labels=labels,with_labels=True, node_size=200, node_color="orange")
-    plt.show() 
-    return adjList
+    plt.show()
 
 def checkIsingleNode( _graph: MLGraph ):
     helper = NodeHelper(_graph.L, _graph.W)

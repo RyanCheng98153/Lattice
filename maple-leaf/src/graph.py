@@ -56,3 +56,15 @@ class MLGraph:
                 print(printStr2)
                 printStr1 = ''
                 printStr2 = ''
+    
+    def getAdjList(self):
+        adjList = []
+        for srcNode in self.nodes:
+            if srcNode == None:
+                continue
+            for adjNode in [srcNode.right, srcNode.bottom, srcNode.bottomRight]:
+                if adjNode == None:
+                    continue
+                adjList.append([srcNode.id, adjNode.id])
+        
+        return adjList
