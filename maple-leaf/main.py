@@ -1,7 +1,7 @@
 import sys
 from src.graph import MLGraph
-from src.helper import PrintHelper, NodeHelper
-from src.visualize import VisualizeHelper
+from src.test import Test
+from src.visualize import Visualize
     
 def main():
     L:int = int(sys.argv[1])
@@ -16,28 +16,8 @@ def main():
     # graph.printGraphText()
     # graph.printGraphVisual()
     
-    VisualizeHelper.visualize(graph, labelHexagon=False)
-    # checkIsingleNode(graph)
+    # Test.checkIsingleNode(graph)
+    Visualize.visualize(graph, labelHexagon=False)
     
-def checkIsingleNode( _graph: MLGraph ):
-    helper = NodeHelper(_graph.L, _graph.W)
-    n = 0
-    while(n >= 0):
-        try:
-            id = int(input(f"node id you wanna check (0~{ _graph.L * _graph.W -1 }): "))
-        except:
-            print("invalid input, terminate")
-            break
-        if ( id >= ( _graph.L * _graph.W -1 ) ):
-            print("invalid input")
-            continue
-        
-        if _graph.nodes[id] != None:
-            _graph.nodes[id].printNodeVisual(True)
-        else:
-            print( PrintHelper.getPrettyId(None) + '   ' + PrintHelper.getPrettyId(helper.getRight(id) ) )
-            print( '     ' + '   ' + '     ' )
-            print( PrintHelper.getPrettyId(helper.getBottom(id)) + '   ' + PrintHelper.getPrettyId(helper.getBottomRight(id) ) )
-            
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 from src.graph import MLGraph
  
-class VisualizeHelper:
+class Visualize:
     def __init__(self) -> None:
         pass
     
@@ -12,7 +12,7 @@ class VisualizeHelper:
         G = nx.empty_graph( n=0 )
         # exists nodes
         G.add_nodes_from((i, j) for i in range(_graph.W) for j in range(_graph.L))
-        nodelist = deepcopy.deepcopy(G.nodes())
+        nodelist = deepcopy(G.nodes())
         # right
         G.add_edges_from(((i, j), (i+1, j)) for i in range(_graph.W-1) for j in range(_graph.L))
         # button
