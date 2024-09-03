@@ -9,7 +9,7 @@ class Visualize:
     
     @staticmethod
     def visualizeTriangular( _graph: MLGraph ):
-        G = nx.empty_graph( n=0 )
+        G:nx.Graph = nx.empty_graph( n=0 )
         # exists nodes
         G.add_nodes_from((i, j) for i in range(_graph.W) for j in range(_graph.L))
         nodelist = deepcopy(G.nodes())
@@ -30,7 +30,7 @@ class Visualize:
     
     @staticmethod
     def visualize( _graph: MLGraph, labelHexagon = False ):
-        G = nx.empty_graph( n=0 )
+        G: nx.Graph = nx.empty_graph( n=0 )
         
         def getPosition (_id):
             y, x = _id // _graph.W, _id % _graph.W
@@ -49,31 +49,34 @@ class Visualize:
         # get edgeList from adjList
         edgesList = []
         
-        for srcId, adjId in _graph.getAdjList():
+        for srcId, adjId, bondStrength in _graph.getAdjList():
             # right button periodic
             if srcId == len(_graph.nodes) -1 and adjId == 0:
-                edgesList.append((getPosition(srcId), (_graph.W, -1) ))
+                edgesList.append((getPosition(srcId), (_graph.W, -1), bondStrength))
                 continue
             # right periodic column
             if (srcId+1) % _graph.W == 0 and adjId % _graph.W == 0:
                 adjX, adjY = getPosition(adjId)
-                edgesList.append((getPosition(srcId), (_graph.W, adjY) ))
+                edgesList.append((getPosition(srcId), (_graph.W, adjY), bondStrength ))
                 continue
             # bottom periodic row
             if srcId // _graph.W == _graph.L-1 and adjId // _graph.W == 0:
                 adjX, adjY = getPosition(adjId)
-                edgesList.append((getPosition(srcId), (adjX, -1) ))
+                edgesList.append((getPosition(srcId), (adjX, -1), bondStrength ))
                 continue
-            edgesList.append((getPosition(srcId), getPosition(adjId)))
+            edgesList.append((getPosition(srcId), getPosition(adjId), bondStrength))
         
+        # print(edgesList)
         # add the edges to the graph
-        G.add_edges_from( edgesList )
+        G.add_weighted_edges_from( edgesList )
         
         pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
         labels = dict( ((i, j), index) for index, (i, j) in enumerate(nodelist) ) #Add the labels to the nodes
         # print(labels)
         
         # draw
-        # nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=200)
-        nx.draw(G, pos=pos, labels=labels,with_labels=True, node_size=200, node_color="orange")
+        weight_labels = nx.get_edge_attributes(G,'weight')
+        nx.draw(G, pos, labels=labels, with_labels=True, node_size=200, node_color = "orange", edge_color= "black", font_size=10)    
+        nx.draw_networkx_edge_labels(G,pos,edge_labels=weight_labels)
+        
         plt.show()
