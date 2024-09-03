@@ -62,9 +62,11 @@ class MLGraph:
         for srcNode in self.nodes:
             if srcNode == None:
                 continue
-            for adjNode in [srcNode.right, srcNode.bottom, srcNode.bottomRight]:
+            for adjNode, bondStrength in [[srcNode.right, srcNode.JRight], 
+                                         [srcNode.bottom, srcNode.JBottom], 
+                                         [srcNode.bottomRight, srcNode.JBottomRight]]:
                 if adjNode == None:
                     continue
-                adjList.append([srcNode.id, adjNode.id])
+                adjList.append([srcNode.id, adjNode.id, bondStrength])
         
         return adjList

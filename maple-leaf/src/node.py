@@ -14,6 +14,10 @@ class Node:
         self.bottom     :Node = None
         self.bottomRight:Node = None
         
+        self.JRight      :float = 0.0
+        self.JBottom     :float = 0.0
+        self.JBottomRight:float = 0.0
+        
         self.left       :Node = None
 
     def printNodeText( self ):
