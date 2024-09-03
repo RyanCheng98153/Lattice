@@ -11,6 +11,9 @@ class MLGraph:
         self.helper     :NodeHelper = NodeHelper(_L, _W)
     
     def getIdentify(self, _id):
+        '''
+        if identify of id is 0, there should be a hexagon hole at id 
+        '''
         i, j = self.helper.getCood(_id)
         return ( j - 3*i - self.hexInit) % 7    
     
@@ -31,6 +34,18 @@ class MLGraph:
                     self.nodes[srcId].bottom = None
                 if self.getIdentify(srcId) == 2:
                     self.nodes[srcId].bottomRight = None
+                    
+    def bondGraph(self, _JTriangle:float, _JHexagon: float, _JDimer: float):
+        for i in range(0, self.L):
+            for j in range(0, self.W):
+                srcId = self.helper.getId(i, j)
+                if self.nodes[srcId].right.right == None:
+                    self.nodes[srcId].JRight = _JTriangle
+                if self.nodes[srcId].right.right == None:
+                    self.nodes[srcId].JRight = _JTriangle
+                if self.nodes[srcId].right.right == None:
+                    self.nodes[srcId].JRight = _JTriangle
+                    
                 
     def printGraphText(self):
         for i, node in enumerate(self.nodes):
