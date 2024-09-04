@@ -1,4 +1,4 @@
-from src.node import Node
+from src.node import Node, BondType
 from src.helper import PrintHelper, NodeHelper
 from typing import List
 
@@ -50,13 +50,22 @@ class MLGraph:
                     self.nodes[right].JRight = _JTriangle
                     self.nodes[bottom].JBottom = _JTriangle
                     self.nodes[bottomRight].JBottomRight = _JTriangle
+                    self.nodes[right].rightType = BondType.Triangle
+                    self.nodes[bottom].bottomType = BondType.Triangle
+                    self.nodes[right].bottomRightType = BondType.Triangle
                     # hexagon lattice
                     self.nodes[right].JBottom = _JHexagon
                     self.nodes[bottom].JRight = _JHexagon
+                    self.nodes[right].bottomType = BondType.Hexagon
+                    self.nodes[bottom].rightType = BondType.Hexagon
                     # dimer lattice
                     self.nodes[right].JBottomRight = _JDimer
                     self.nodes[bottomRight].JBottom = _JDimer
                     self.nodes[bottomRight].bottomRight.JRight = _JDimer
+                    self.nodes[right].bottomRightType = BondType.Dimer
+                    self.nodes[bottomRight].bottomType = BondType.Dimer
+                    self.nodes[bottomRight].bottomRightType = BondType.Dimer
+                    
                     continue
                     
                 # is a regular node
@@ -67,19 +76,25 @@ class MLGraph:
                 # hexagon lattice
                 if rightNode == None or bottomNode == None:
                     self.nodes[srcId].JBottomRight = _JHexagon
+                    self.nodes[srcId].bottomRightType = BondType.Hexagon
                 if bottomRightNode == None:
                     self.nodes[srcId].JRight = _JHexagon
                     self.nodes[srcId].JBottom = _JHexagon
-                    
+                    self.nodes[srcId].rightType = BondType.Hexagon
+                    self.nodes[srcId].bottomType = BondType.Hexagon
+                
                 # triangular lattice
                 if rightNode != None and rightNode.right == None:
                     self.nodes[srcId].JRight = _JTriangle
+                    self.nodes[srcId].rightType =BondType.Triangle
                     continue
                 if bottomNode != None and bottomNode.bottom == None:
                     self.nodes[srcId].JBottom = _JTriangle
+                    self.nodes[srcId].bottomType = BondType.Triangle
                     continue
                 if bottomRightNode != None and bottomRightNode.bottomRight == None:
                     self.nodes[srcId].JBottomRight = _JTriangle
+                    self.nodes[srcId].bottomRightType = BondType.Triangle
                     continue
                 
                 

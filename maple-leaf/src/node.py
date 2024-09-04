@@ -5,6 +5,11 @@ class Spin(Enum):
     UP = 1
     DOWN = 0
 
+class BondType(Enum):
+    Triangle = 0
+    Hexagon = 1
+    Dimer = 2
+    
 class Node:
     def __init__(self, _id:int):
         self.id:int = _id
@@ -18,8 +23,10 @@ class Node:
         self.JBottom     :float = 0.0
         self.JBottomRight:float = 0.0
         
-        self.left       :Node = None
-
+        self.rightType         :BondType = None
+        self.bottomType        :BondType = None
+        self.bottomRightType   :BondType = None
+        
     def printNodeText( self ):
         print( f"[Node {self.id}]: {self.spin}" )
         output_str = f"right: {None if self.right == None else f'{self.right.id} {self.right.spin}'}"
