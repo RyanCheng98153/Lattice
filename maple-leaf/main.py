@@ -13,6 +13,7 @@ def main():
     
     graph = MLGraph(L, W, hexInit)
     graph.makeGraph()
+    graph.bondGraph(3.0, 6.0, 2.0)
     # graph.printGraphText()
     # graph.printGraphVisual()
     

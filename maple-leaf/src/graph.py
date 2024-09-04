@@ -39,13 +39,49 @@ class MLGraph:
         for i in range(0, self.L):
             for j in range(0, self.W):
                 srcId = self.helper.getId(i, j)
-                if self.nodes[srcId].right.right == None:
-                    self.nodes[srcId].JRight = _JTriangle
-                if self.nodes[srcId].right.right == None:
-                    self.nodes[srcId].JRight = _JTriangle
-                if self.nodes[srcId].right.right == None:
-                    self.nodes[srcId].JRight = _JTriangle
+                # is hexagon hole
+                if self.nodes[srcId] == None:
+                    # empty(None) Node don't have member variable of right, bottom, bottomRight
+                    # so, find right, bottom, bottomRight from graph
+                    right = self.helper.getRight(srcId)
+                    bottom = self.helper.getBottom(srcId)
+                    bottomRight = self.helper.getBottomRight(srcId)
+                    # triangular lattice
+                    self.nodes[right].JRight = _JTriangle
+                    self.nodes[bottom].JBottom = _JTriangle
+                    self.nodes[bottomRight].JBottomRight = _JTriangle
+                    # hexagon lattice
+                    self.nodes[right].JBottom = _JHexagon
+                    self.nodes[bottom].JRight = _JHexagon
+                    # dimer lattice
+                    self.nodes[right].JBottomRight = _JDimer
+                    self.nodes[bottomRight].JBottom = _JDimer
+                    self.nodes[bottomRight].bottomRight.JRight = _JDimer
+                    continue
                     
+                # is a regular node
+                rightNode = self.nodes[srcId].right
+                bottomNode = self.nodes[srcId].bottom
+                bottomRightNode = self.nodes[srcId].bottomRight
+                
+                # hexagon lattice
+                if rightNode == None or bottomNode == None:
+                    self.nodes[srcId].JBottomRight = _JHexagon
+                if bottomRightNode == None:
+                    self.nodes[srcId].JRight = _JHexagon
+                    self.nodes[srcId].JBottom = _JHexagon
+                    
+                # triangular lattice
+                if rightNode != None and rightNode.right == None:
+                    self.nodes[srcId].JRight = _JTriangle
+                    continue
+                if bottomNode != None and bottomNode.bottom == None:
+                    self.nodes[srcId].JBottom = _JTriangle
+                    continue
+                if bottomRightNode != None and bottomRightNode.bottomRight == None:
+                    self.nodes[srcId].JBottomRight = _JTriangle
+                    continue
+                
                 
     def printGraphText(self):
         for i, node in enumerate(self.nodes):
