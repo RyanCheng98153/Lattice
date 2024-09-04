@@ -52,7 +52,7 @@ class MLGraph:
                     self.nodes[bottomRight].JBottomRight = _JTriangle
                     self.nodes[right].rightType = BondType.Triangle
                     self.nodes[bottom].bottomType = BondType.Triangle
-                    self.nodes[right].bottomRightType = BondType.Triangle
+                    self.nodes[bottomRight].bottomRightType = BondType.Triangle
                     # hexagon lattice
                     self.nodes[right].JBottom = _JHexagon
                     self.nodes[bottom].JRight = _JHexagon
@@ -64,7 +64,7 @@ class MLGraph:
                     self.nodes[bottomRight].bottomRight.JRight = _JDimer
                     self.nodes[right].bottomRightType = BondType.Dimer
                     self.nodes[bottomRight].bottomType = BondType.Dimer
-                    self.nodes[bottomRight].bottomRightType = BondType.Dimer
+                    self.nodes[bottomRight].bottomRight.rightType = BondType.Dimer
                     
                     continue
                     
@@ -128,11 +128,11 @@ class MLGraph:
         for srcNode in self.nodes:
             if srcNode == None:
                 continue
-            for adjNode, bondStrength in [[srcNode.right, srcNode.JRight], 
-                                         [srcNode.bottom, srcNode.JBottom], 
-                                         [srcNode.bottomRight, srcNode.JBottomRight]]:
+            for adjNode, bondStrength, bondType in [[srcNode.right, srcNode.JRight, srcNode.rightType], 
+                                                [srcNode.bottom, srcNode.JBottom, srcNode.bottomType], 
+                                                [srcNode.bottomRight, srcNode.JBottomRight, srcNode.bottomRightType]]:
                 if adjNode == None:
                     continue
-                adjList.append([srcNode.id, adjNode.id, bondStrength])
+                adjList.append([srcNode.id, adjNode.id, bondStrength, bondType])
         
         return adjList
