@@ -3,6 +3,7 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 from src.graph import MLGraph
 from src.node import BondType
+from math import sqrt
  
 class Visualize:
     def __init__(self) -> None:
@@ -30,7 +31,7 @@ class Visualize:
         plt.show() 
     
     @staticmethod
-    def visualize( _graph: MLGraph, labelHexagon = False ):
+    def visualize( _graph: MLGraph, labelHexagon = False, showStrength=False ):
         G: nx.Graph = nx.empty_graph( n=0 )
         
         def getPosition (_id):
@@ -50,54 +51,64 @@ class Visualize:
         # get edgeList from adjList
         # edgesList = []
         
-        def bondColor(bondType: BondType) -> str:
+        def getBondStyle(bondType: BondType) -> tuple[str, str]:
             if bondType == BondType.Hexagon:
-                return "blue"
+                return "blue", "-"
             if bondType == BondType.Triangle:
-                return "orange"
+                return "orange", "--"
             if bondType == BondType.Dimer:
-                return "red"
+                return "red", "-"
         
         for srcId, adjId, bondStrength, bondType in _graph.getAdjList():
             if bondType == None:
-                color = "black"
+                bondColor, bondStyle = "black", "-"
             else:
-                color = bondColor(bondType)
-
+                bondColor, bondStyle = getBondStyle(bondType)
+            
             # right button periodic
             if srcId == len(_graph.nodes) -1 and adjId == 0:
                 # edgesList.append((getPosition(srcId), (_graph.W, -1), bondStrength))
-                G.add_edge(getPosition(srcId), (_graph.W, -1), weight=bondStrength, color=color)
+                G.add_edge(getPosition(srcId), (_graph.W, -1), weight=bondStrength, color=bondColor, style=bondStyle)
                 continue
             # right periodic column
             if (srcId+1) % _graph.W == 0 and adjId % _graph.W == 0:
                 adjX, adjY = getPosition(adjId)
                 # edgesList.append((getPosition(srcId), (_graph.W, adjY), bondStrength ))
-                G.add_edge(getPosition(srcId), (_graph.W, adjY), weight=bondStrength, color=color)
+                G.add_edge(getPosition(srcId), (_graph.W, adjY), weight=bondStrength, color=bondColor, style=bondStyle)
                 continue
             # bottom periodic row
             if srcId // _graph.W == _graph.L-1 and adjId // _graph.W == 0:
                 adjX, adjY = getPosition(adjId)
                 # edgesList.append((getPosition(srcId), (adjX, -1), bondStrength ))
-                G.add_edge(getPosition(srcId), (adjX, -1), weight=bondStrength, color=color)
+                G.add_edge(getPosition(srcId), (adjX, -1), weight=bondStrength, color=bondColor, style=bondStyle)
                 continue
             # edgesList.append((getPosition(srcId), getPosition(adjId), bondStrength ))
             # color = bondColor(bondType)
-            G.add_edge(getPosition(srcId), getPosition(adjId), weight=bondStrength, color=color)
+            G.add_edge(getPosition(srcId), getPosition(adjId), weight=bondStrength, color=bondColor, style=bondStyle)
             
         # print(edgesList)
         # add the edges to the graph
         # G.add_weighted_edges_from( edgesList )
         
-        pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
+        sqrt3 = sqrt(3)
+        pos = dict( ((i, j), (i+j/2, j*sqrt3)) for (i, j) in G.nodes() ) #Dictionary of all positions
         labels = dict( ((i, j), index) for index, (i, j) in enumerate(nodelist) ) #Add the labels to the nodes
-        # print(labels)
         
         # draw
-        color = nx.get_edge_attributes(G, 'color').values()
+        bondColor = nx.get_edge_attributes(G, 'color').values()
+        bondStyle = nx.get_edge_attributes(G, 'style').values()
         weight_labels = nx.get_edge_attributes(G,'weight')
-        # print(color_labels)
-        nx.draw(G, pos, labels=labels, with_labels=True, node_size=200, node_color = "orange", edge_color= color, font_size=10)    
-        nx.draw_networkx_edge_labels(G,pos,edge_labels=weight_labels)
+        
+        node_width = 250 if _graph.L == 7 else 200
+        edge_width = 5 if _graph.L == 7 else 2
+        font_size = 10 if _graph.L == 7 else 8
+        
+        nx.draw(G, pos, labels=labels, with_labels=True, 
+                node_size=node_width, font_size=font_size, 
+                node_color = "orange", edgecolors="black",
+                edge_color=bondColor, width=edge_width, style=bondStyle)    
+        # add label of bond edge strength
+        if showStrength:
+            nx.draw_networkx_edge_labels(G,pos,edge_labels=weight_labels)
         
         plt.show()
