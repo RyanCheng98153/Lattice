@@ -55,6 +55,7 @@ class Visualize:
             if bondType == BondType.Hexagon:
                 return "blue", "-"
             if bondType == BondType.Triangle:
+                # return "orange", ":"
                 return "orange", "--"
             if bondType == BondType.Dimer:
                 return "red", "-"
@@ -100,7 +101,7 @@ class Visualize:
         weight_labels = nx.get_edge_attributes(G,'weight')
         
         node_width = 250 if _graph.L == 7 else 200
-        edge_width = 5 if _graph.L == 7 else 2
+        edge_width = 3 if _graph.L == 7 else 2
         font_size = 10 if _graph.L == 7 else 8
         
         nx.draw(G, pos, labels=labels, with_labels=True, 
