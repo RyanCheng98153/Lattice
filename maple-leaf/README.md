@@ -22,14 +22,16 @@ pip install -r ./requirements.txt
 
 ## Visualize Figure Examples
 - Maple Leaf Lattice (Visualize with Networkx Graph)
-- default: not labeling the hexagons
+- default: not label the hexagon and not label strength
 <table >
   <tr>
-    <td><b>Ignore hexagons (Not Labeling Hexagons) </b></td>
+    <td><b>Maple Leaf plain graph</b></td>
+    <td><b>Labeled bond strength</b></td>
     <td><b>Labeled hexagons position</b></td>
   </tr>
   <tr>
     <td><img src="./figs/doc/ML_7_7.png"> 
+    <td><img src="./figs/doc/ML_7_7_Strength.png"> 
     <td><img src="./figs/doc/ML_7_7_labelHex.png">
   </tr>
 </table>

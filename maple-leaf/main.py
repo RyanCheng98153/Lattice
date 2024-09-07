@@ -18,7 +18,7 @@ def main():
     # graph.printGraphVisual()
     
     # Test.checkIsingleNode(graph)
-    Visualize.visualize(graph, labelHexagon=True, showStrength=False)
+    Visualize.visualize(graph, labelHexagon=False, showStrength=False)
     
 if __name__ == "__main__":
     main()
