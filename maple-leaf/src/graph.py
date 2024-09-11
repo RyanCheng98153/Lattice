@@ -123,8 +123,15 @@ class MLGraph:
                 printStr1 = ''
                 printStr2 = ''
     
-    def getAdjList(self):
+    def getAdjList(self, clean = False):
         adjList = []
+        def getClean(_id: int):
+            new_id = _id
+            if _id % 7 > self.hexInit:
+                new_id -= 1 
+            new_id -= (_id // 7)
+            return new_id
+            
         for srcNode in self.nodes:
             if srcNode == None:
                 continue
@@ -133,13 +140,16 @@ class MLGraph:
                                                 [srcNode.bottomRight, srcNode.JBottomRight, srcNode.bottomRightType]]:
                 if adjNode == None:
                     continue
-                adjList.append([srcNode.id, adjNode.id, bondStrength, bondType])
+                if clean:
+                    adjList.append([getClean(srcNode.id), getClean(adjNode.id), bondStrength, bondType])
+                else:
+                    adjList.append([srcNode.id, adjNode.id, bondStrength, bondType])
         
         return adjList
     
     def getSpacefileText(self):
         spaceText = f"# Model: L {self.L} W {self.W} Maple Leaf Graph" + "\n"
-        for srcId, adjId, strength, bondType in self.getAdjList():
+        for srcId, adjId, strength, bondType in self.getAdjList(clean=True):
             spaceText += f"{srcId} {adjId} {strength}\n"
             
         return spaceText
