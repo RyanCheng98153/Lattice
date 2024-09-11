@@ -136,3 +136,10 @@ class MLGraph:
                 adjList.append([srcNode.id, adjNode.id, bondStrength, bondType])
         
         return adjList
+    
+    def getSpacefileText(self):
+        spaceText = f"# Model: L {self.L} W {self.W} Maple Leaf Graph" + "\n"
+        for srcId, adjId, strength, bondType in self.getAdjList():
+            spaceText += f"{srcId} {adjId} {strength}\n"
+            
+        return spaceText
