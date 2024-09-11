@@ -125,12 +125,13 @@ class MLGraph:
     
     def getAdjList(self, clean = False):
         adjList = []
-        def getClean(_id: int):
-            new_id = _id
-            if _id % 7 > self.hexInit:
-                new_id -= 1 
-            new_id -= (_id // 7)
-            return new_id
+        
+        if clean:
+            index = 0
+            for srcNode in self.nodes:
+                if srcNode != None:
+                    srcNode.clean_id = index
+                    index += 1
             
         for srcNode in self.nodes:
             if srcNode == None:
@@ -141,7 +142,7 @@ class MLGraph:
                 if adjNode == None:
                     continue
                 if clean:
-                    adjList.append([getClean(srcNode.id), getClean(adjNode.id), bondStrength, bondType])
+                    adjList.append([srcNode.clean_id, adjNode.clean_id, bondStrength, bondType])
                 else:
                     adjList.append([srcNode.id, adjNode.id, bondStrength, bondType])
         

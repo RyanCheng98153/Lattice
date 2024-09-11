@@ -12,7 +12,8 @@ class BondType(Enum):
     
 class Node:
     def __init__(self, _id:int):
-        self.id:int = _id
+        self.id         :int = _id
+        self.clean_id   :int = _id
         self.spin:Spin = Spin.UP
         
         self.right      :Node = None
