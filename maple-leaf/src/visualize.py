@@ -10,26 +10,6 @@ class Visualize:
         pass
     
     @staticmethod
-    def visualizeTriangular( _graph: MLGraph ):
-        G:nx.Graph = nx.empty_graph( n=0 )
-        # exists nodes
-        G.add_nodes_from((i, j) for i in range(_graph.W) for j in range(_graph.L))
-        nodelist = deepcopy(G.nodes())
-        # right
-        G.add_edges_from(((i, j), (i+1, j)) for i in range(_graph.W-1) for j in range(_graph.L))
-        # button
-        G.add_edges_from(((i, j), (i, j+1)) for i in range(_graph.W) for j in range(_graph.L-1))
-        # button right
-        G.add_edges_from(((i, j), (i+1, j-1)) for i in range(_graph.W) for j in range(_graph.L))
-        
-        pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
-        labels = dict( ((i, j), i + (_graph.L-1-j) * _graph.W ) for i, j in nodelist )
-        # print(labels)
-        nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=10)
-        # nx.draw_networkx(G) 
-        plt.show() 
-    
-    @staticmethod
     def visualize( _graph: MLGraph, labelHexagon = False, showStrength=False ):
         G: nx.Graph = nx.empty_graph( n=0 )
         
@@ -46,9 +26,6 @@ class Visualize:
             G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
         
         nodelist = deepcopy(G.nodes()) # using deep copy not shallow copy because nx.network may return reference
-        
-        # get edgeList from adjList
-        # edgesList = []
         
         def getBondStyle(bondType: BondType) -> tuple[str, str]:
             if bondType == BondType.Hexagon:
@@ -67,36 +44,27 @@ class Visualize:
             
             # right button periodic
             if srcId == len(_graph.nodes) -1 and adjId == 0:
-                # edgesList.append((getPosition(srcId), (_graph.W, -1), bondStrength))
-                G.add_edge(getPosition(srcId), (_graph.W, -1), weight=bondStrength, color=bondColor, style=bondStyle)
+                G.add_edge(getPosition(srcId), (_graph.W, -1), weight=bondStrength, bondColor=bondColor, bondStyle=bondStyle)
                 continue
             # right periodic column
             if (srcId+1) % _graph.W == 0 and adjId % _graph.W == 0:
                 adjX, adjY = getPosition(adjId)
-                # edgesList.append((getPosition(srcId), (_graph.W, adjY), bondStrength ))
-                G.add_edge(getPosition(srcId), (_graph.W, adjY), weight=bondStrength, color=bondColor, style=bondStyle)
+                G.add_edge(getPosition(srcId), (_graph.W, adjY), weight=bondStrength, bondColor=bondColor, bondStyle=bondStyle)
                 continue
             # bottom periodic row
             if srcId // _graph.W == _graph.L-1 and adjId // _graph.W == 0:
                 adjX, adjY = getPosition(adjId)
-                # edgesList.append((getPosition(srcId), (adjX, -1), bondStrength ))
-                G.add_edge(getPosition(srcId), (adjX, -1), weight=bondStrength, color=bondColor, style=bondStyle)
+                G.add_edge(getPosition(srcId), (adjX, -1), weight=bondStrength, bondColor=bondColor, bondStyle=bondStyle)
                 continue
-            # edgesList.append((getPosition(srcId), getPosition(adjId), bondStrength ))
-            # color = bondColor(bondType)
-            G.add_edge(getPosition(srcId), getPosition(adjId), weight=bondStrength, color=bondColor, style=bondStyle)
+            G.add_edge(getPosition(srcId), getPosition(adjId), weight=bondStrength, bondColor=bondColor, bondStyle=bondStyle)
             
-        # print(edgesList)
-        # add the edges to the graph
-        # G.add_weighted_edges_from( edgesList )
-        
         sqrt3 = sqrt(3)
         pos = dict( ((i, j), (i+j/2, j*sqrt3)) for (i, j) in G.nodes() ) #Dictionary of all positions
         labels = dict( ((i, j), index) for index, (i, j) in enumerate(nodelist) ) #Add the labels to the nodes
         
         # draw
-        bondColor = nx.get_edge_attributes(G, 'color').values()
-        bondStyle = nx.get_edge_attributes(G, 'style').values()
+        bondColor = nx.get_edge_attributes(G, 'bondColor').values()
+        bondStyle = nx.get_edge_attributes(G, 'bondStyle').values()
         weight_labels = nx.get_edge_attributes(G,'weight')
         
         node_width = 250 if _graph.L == 7 else 200
@@ -112,3 +80,23 @@ class Visualize:
             nx.draw_networkx_edge_labels(G,pos,edge_labels=weight_labels)
         
         plt.show()
+
+    @staticmethod
+    def visualizeTriangular( _graph: MLGraph ):
+        G:nx.Graph = nx.empty_graph( n=0 )
+        # exists nodes
+        G.add_nodes_from((i, j) for i in range(_graph.W) for j in range(_graph.L))
+        nodelist = deepcopy(G.nodes())
+        # right
+        G.add_edges_from(((i, j), (i+1, j)) for i in range(_graph.W-1) for j in range(_graph.L))
+        # button
+        G.add_edges_from(((i, j), (i, j+1)) for i in range(_graph.W) for j in range(_graph.L-1))
+        # button right
+        G.add_edges_from(((i, j), (i+1, j-1)) for i in range(_graph.W) for j in range(_graph.L))
+        
+        pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
+        labels = dict( ((i, j), i + (_graph.L-1-j) * _graph.W ) for i, j in nodelist )
+        # print(labels)
+        nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=10)
+        # nx.draw_networkx(G) 
+        plt.show() 
