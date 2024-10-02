@@ -1,39 +1,52 @@
-from src.node import Node, BondType
+from src.node import Node, NodeType
 from src.helper import PrintHelper, NodeHelper
 from typing import List
 
-class MLGraph:
+class KagomeGraph:
     def __init__(self, _L:int, _W:int, _hexInit:int):
         self.L = _L
         self.W = _W
         self.nodes      :List[Node] = [Node(i) for i in range(0, _L*_W)]
-        self.hexInit    :int = _hexInit
+        # self.hexInit    :int = _hexInit
         self.helper     :NodeHelper = NodeHelper(_L, _W)
     
     def getIdentify(self, _id):
         '''
-        if identify of id is 0, there should be a hexagon hole at id 
+        if identify of id is 0, identify as green node
+        if identify of id is 1, identify as red node
+        if identify of id is 2, identify as blue node
+        if identify of id is 3, identify as hexagon center hole
         '''
         i, j = self.helper.getCood(_id)
-        return ( j - 3*i - self.hexInit) % 7    
+        return 2 * (i%2) + (j%2)
     
     def makeGraph(self):
         for i in range(0, self.L):
             for j in range(0, self.W):
                 srcId = self.helper.getId(i, j)
-                if self.getIdentify(srcId) == 0 :
+                # Hexagon center hole
+                if self.getIdentify(srcId) == 3:
                     self.nodes[srcId] = None
                     continue
                 self.nodes[srcId].right = self.nodes[self.helper.getRight(srcId)]
                 self.nodes[srcId].bottom = self.nodes[self.helper.getBottom(srcId)]
                 self.nodes[srcId].bottomRight = self.nodes[self.helper.getBottomRight(srcId)]
                 
-                if self.getIdentify(srcId) == 6:
-                    self.nodes[srcId].right = None
-                if self.getIdentify(srcId) == 3:
-                    self.nodes[srcId].bottom = None
-                if self.getIdentify(srcId) == 2:
+                # Green
+                if self.getIdentify(srcId) == 0:
+                    self.nodes[srcId].NodeType = NodeType.Green
                     self.nodes[srcId].bottomRight = None
+                    continue
+                # Red 
+                if self.getIdentify(srcId) == 1:
+                    self.nodes[srcId].NodeType = NodeType.Red
+                    self.nodes[srcId].bottom = None
+                    continue
+                # Blue
+                if self.getIdentify(srcId) == 2:
+                    self.nodes[srcId].NodeType = NodeType.Blue
+                    self.nodes[srcId].right = None
+                    continue
                     
     def bondGraph(self, _JTriangle:float, _JHexagon: float, _JDimer: float):
         for i in range(0, self.L):
@@ -43,58 +56,22 @@ class MLGraph:
                 if self.nodes[srcId] == None:
                     # empty(None) Node don't have member variable of right, bottom, bottomRight
                     # so, find right, bottom, bottomRight from graph
-                    right = self.helper.getRight(srcId)
-                    bottom = self.helper.getBottom(srcId)
-                    bottomRight = self.helper.getBottomRight(srcId)
-                    # triangular lattice
-                    self.nodes[right].JRight = _JTriangle
-                    self.nodes[bottom].JBottom = _JTriangle
-                    self.nodes[bottomRight].JBottomRight = _JTriangle
-                    self.nodes[right].rightType = BondType.Triangle
-                    self.nodes[bottom].bottomType = BondType.Triangle
-                    self.nodes[bottomRight].bottomRightType = BondType.Triangle
-                    # hexagon lattice
-                    self.nodes[right].JBottom = _JHexagon
-                    self.nodes[bottom].JRight = _JHexagon
-                    self.nodes[right].bottomType = BondType.Hexagon
-                    self.nodes[bottom].rightType = BondType.Hexagon
-                    # dimer lattice
-                    self.nodes[right].JBottomRight = _JDimer
-                    self.nodes[bottomRight].JBottom = _JDimer
-                    self.nodes[bottomRight].bottomRight.JRight = _JDimer
-                    self.nodes[right].bottomRightType = BondType.Dimer
-                    self.nodes[bottomRight].bottomType = BondType.Dimer
-                    self.nodes[bottomRight].bottomRight.rightType = BondType.Dimer
-                    
                     continue
                     
                 # is a regular node
-                rightNode = self.nodes[srcId].right
-                bottomNode = self.nodes[srcId].bottom
-                bottomRightNode = self.nodes[srcId].bottomRight
+                srcNode = self.nodes[srcId]
                 
-                # hexagon lattice
-                if rightNode == None or bottomNode == None:
-                    self.nodes[srcId].JBottomRight = _JHexagon
-                    self.nodes[srcId].bottomRightType = BondType.Hexagon
-                if bottomRightNode == None:
-                    self.nodes[srcId].JRight = _JHexagon
-                    self.nodes[srcId].JBottom = _JHexagon
-                    self.nodes[srcId].rightType = BondType.Hexagon
-                    self.nodes[srcId].bottomType = BondType.Hexagon
-                
-                # triangular lattice
-                if rightNode != None and rightNode.right == None:
-                    self.nodes[srcId].JRight = _JTriangle
-                    self.nodes[srcId].rightType =BondType.Triangle
+                if srcNode.NodeType == NodeType.Green:
+                    srcNode.JRight = _JHexagon
+                    srcNode.JBottom = _JHexagon
                     continue
-                if bottomNode != None and bottomNode.bottom == None:
-                    self.nodes[srcId].JBottom = _JTriangle
-                    self.nodes[srcId].bottomType = BondType.Triangle
+                if srcNode.NodeType == NodeType.Red:
+                    srcNode.JRight = _JHexagon
+                    srcNode.JBottomRight = _JHexagon
                     continue
-                if bottomRightNode != None and bottomRightNode.bottomRight == None:
-                    self.nodes[srcId].JBottomRight = _JTriangle
-                    self.nodes[srcId].bottomRightType = BondType.Triangle
+                if srcNode.NodeType == NodeType.Blue:
+                    srcNode.JBottom = _JHexagon
+                    srcNode.JBottomRight = _JHexagon
                     continue
                 
                 
@@ -123,34 +100,38 @@ class MLGraph:
                 printStr1 = ''
                 printStr2 = ''
     
-    def getAdjList(self, clean = False):
+    def getAdjList(self):
         adjList = []
-        
-        if clean:
-            index = 0
-            for srcNode in self.nodes:
-                if srcNode != None:
-                    srcNode.clean_id = index
-                    index += 1
-            
         for srcNode in self.nodes:
             if srcNode == None:
                 continue
-            for adjNode, bondStrength, bondType in [[srcNode.right, srcNode.JRight, srcNode.rightType], 
+            for adjNode, bondStrength, bondType in [[srcNode.right, srcNode.JRight,srcNode.rightType], 
                                                 [srcNode.bottom, srcNode.JBottom, srcNode.bottomType], 
                                                 [srcNode.bottomRight, srcNode.JBottomRight, srcNode.bottomRightType]]:
                 if adjNode == None:
                     continue
-                if clean:
-                    adjList.append([srcNode.clean_id, adjNode.clean_id, bondStrength, bondType])
-                else:
-                    adjList.append([srcNode.id, adjNode.id, bondStrength, bondType])
+                adjList.append([srcNode.id, adjNode.id, bondStrength, bondType])
         
         return adjList
     
     def getSpacefileText(self):
-        spaceText = f"# Model: L {self.L} W {self.W} Maple Leaf Graph" + "\n"
-        for srcId, adjId, strength, bondType in self.getAdjList(clean=True):
-            spaceText += f"{srcId} {adjId} {strength}\n"
+        index = 0
+        for srcNode in self.nodes:
+            if srcNode != None:
+                srcNode.clean_id = index
+                index += 1
+        
+        spaceText = f"# Model: L {self.L} W {self.W} Kagome Graph" + "\n"
+        for srcNode in self.nodes:
+            if srcNode == None:
+                continue
+            srcId = srcNode.id
+            for adjNode, strength in [[srcNode.right, srcNode.JRight],
+                            [srcNode.bottom, srcNode.JBottom],
+                            [srcNode.bottomRight, srcNode.JBottomRight]]:
+                if adjNode == None:
+                    continue
+                adjId = adjNode.clean_id
+                spaceText += f"{srcId} {adjId} {strength}\n"
             
         return spaceText

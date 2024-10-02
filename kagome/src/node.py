@@ -5,6 +5,12 @@ class Spin(Enum):
     UP = 1
     DOWN = 0
 
+class NodeType(Enum):
+    Green = 0
+    Red = 1
+    Blue = 2
+    Center = 3
+
 class BondType(Enum):
     Triangle = 0
     Hexagon = 1
@@ -15,6 +21,8 @@ class Node:
         self.id         :int = _id
         self.clean_id   :int = _id
         self.spin:Spin = Spin.UP
+        
+        self.NodeType   :NodeType = None
         
         self.right      :Node = None
         self.bottom     :Node = None

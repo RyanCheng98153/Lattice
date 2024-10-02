@@ -1,9 +1,9 @@
-from src.graph import MLGraph
+from src.graph import KagomeGraph
 from src.helper import PrintHelper, NodeHelper
 
 class Test:
     @staticmethod
-    def checkIsingleNode( _graph: MLGraph ):
+    def checkIsingleNode( _graph: KagomeGraph ):
         helper = NodeHelper(_graph.L, _graph.W)
         n = 0
         while(n >= 0):
