@@ -13,14 +13,15 @@ def main():
     
     graph = MLGraph(L, W, hexInit)
     graph.makeGraph()
-    graph.bondGraph(3.0, 6.0, 2.0)
+    # graph.bondGraph(3.0, 6.0, 2.0)
+    graph.bondGraph(1.0, 1.0, 1.0)
     # graph.printGraphText()
     # graph.printGraphVisual()
     
-    with open(file=f"./mapleleaf_L_{L}_{W}_clean.txt", mode="w") as f:
+    with open(file=f"./mapleleaf_L_{L}_{W}.txt", mode="w") as f:
         f.writelines(graph.getSpacefileText())
     # Test.checkIsingleNode(graph)
-    Visualize.visualize(graph, labelHexagon=False, showStrength=False)
+    # Visualize.visualize(graph, labelHexagon=False, showStrength=False)
     
 if __name__ == "__main__":
     main()
