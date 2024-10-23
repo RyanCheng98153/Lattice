@@ -125,7 +125,7 @@ class KagomeGraph:
         for srcNode in self.nodes:
             if srcNode == None:
                 continue
-            srcId = srcNode.id
+            srcId = srcNode.clean_id
             for adjNode, strength in [[srcNode.right, srcNode.JRight],
                             [srcNode.bottom, srcNode.JBottom],
                             [srcNode.bottomRight, srcNode.JBottomRight]]:

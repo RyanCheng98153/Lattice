@@ -25,6 +25,7 @@ class Visualize:
         # add MLGraphs nodes to networkx graph
         if labelHexagon:
             G.add_nodes_from( getPosition( id ) for id in range(len(_graph.nodes)) )
+            color_map = [(node.NodeType.name)  if node is not None else "grey" for node in _graph.nodes]
         else:
             # ignore the hexagon None ndoes
             G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
