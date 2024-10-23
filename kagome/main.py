@@ -23,7 +23,7 @@ def main():
     with open(file=f"./kagome_L_{L}_{W}.txt", mode="w") as f:
         f.writelines(graph.getSpacefileText())
     # Test.checkIsingleNode(graph)
-    Visualize.visualize(graph, labelHexagon=True, showStrength=False)
+    # Visualize.visualize(graph, labelHexagon=True, showStrength=False)
     
 if __name__ == "__main__":
     main()
