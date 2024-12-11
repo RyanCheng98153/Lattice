@@ -30,7 +30,7 @@ def main():
     
     if len(sys.argv) == 4:
         with open(sys.argv[3], "r") as f:
-            datas = f.readlines()
+            datas = [line for line in f.readlines() if not line.startswith("#")]
         
         ids = [int(id) for id in datas[0].split()[:-2]]
         

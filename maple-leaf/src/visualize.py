@@ -10,7 +10,7 @@ class Visualize:
         pass
     
     @staticmethod
-    def visualize( _graph: MLGraph, labelHexagon = False, showStrength=False ):
+    def visualize( _graph: MLGraph, labelHexagon = False, showStrength=False, fromfile=False ):
         G: nx.Graph = nx.empty_graph( n=0 )
         
         def getPosition (_id):
@@ -27,13 +27,23 @@ class Visualize:
         # add MLGraphs nodes to networkx graph
         if labelHexagon:
             G.add_nodes_from( getPosition( id ) for id in range(len(_graph.nodes)) )
-            color_map = [getSpinColor(node.spin)  if node is not None else "grey" for node in _graph.nodes]
-            
+            if fromfile:
+                color_map = [getSpinColor(node.spin)  if node is not None else "grey" for node in _graph.nodes]
+            else:
+                color_map = ["lightgray"  if node is not None else "grey" for node in _graph.nodes]
+                # get spin color
+                # color_map = [getSpinColor(node.spin)  if node is not None else "grey" for node in _graph.nodes]
+                
         else:
             # ignore the hexagon None ndoes
             G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
-            color_map = [getSpinColor(node.spin) for node in _graph.nodes if node is not None]
-            
+            if fromfile:
+                color_map = [getSpinColor(node.spin) for node in _graph.nodes if node is not None]
+            else:
+                color_map = ["lightgray" for node in _graph.nodes if node is not None]
+                # get spin color
+                # color_map = [getSpinColor(node.spin) for node in _graph.nodes if node is not None]
+                
         nodelist = deepcopy(G.nodes()) # using deep copy not shallow copy because nx.network may return reference
         
         def getBondStyle(bondType: BondType) -> tuple[str, str]:
@@ -80,9 +90,13 @@ class Visualize:
         edge_width = 3 if _graph.L == 7 else 2
         font_size = 10 if _graph.L == 7 else 8
         
+        # color of periodic nodes
         node_num = len(color_map)
         for i in range(G.nodes.__len__() - node_num):
-            color_map.append("grey")
+            if fromfile:
+                color_map.append("gray")
+            else:
+                color_map.append("orange")
         
         nx.draw(G, pos, labels=labels, with_labels=True, 
                 node_size=node_width, font_size=font_size, 

@@ -62,9 +62,10 @@ def main():
                 spin = Spin.UP if qubos[node.clean_id] == 1 else Spin.DOWN
                 node.spin = spin
             # print((node.clean_id, node.spin) if node is not None else None)
-            
-        
-    Visualize.visualize(graph, labelHexagon=False, showStrength=False)
+    
+        Visualize.visualize(graph, labelHexagon=False, showStrength=False, fromfile=True)    
+    else:    
+        Visualize.visualize(graph, labelHexagon=False, showStrength=False)
     
 if __name__ == "__main__":
     main()
