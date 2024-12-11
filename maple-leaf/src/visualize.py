@@ -2,7 +2,7 @@ import networkx as nx
 from copy import deepcopy
 import matplotlib.pyplot as plt
 from src.graph import MLGraph
-from src.node import BondType
+from src.node import BondType, Spin
 from math import sqrt
  
 class Visualize:
@@ -18,13 +18,22 @@ class Visualize:
             y = _graph.L-1-y
             return (x, y)
         
+        def getSpinColor(spin: Spin):
+            if spin == Spin.UP:
+                return "lightblue"
+            if spin == Spin.DOWN:
+                return "blue"
+        
         # add MLGraphs nodes to networkx graph
         if labelHexagon:
             G.add_nodes_from( getPosition( id ) for id in range(len(_graph.nodes)) )
+            color_map = [getSpinColor(node.spin)  if node is not None else "grey" for node in _graph.nodes]
+            
         else:
             # ignore the hexagon None ndoes
             G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
-        
+            color_map = [getSpinColor(node.spin) for node in _graph.nodes if node is not None]
+            
         nodelist = deepcopy(G.nodes()) # using deep copy not shallow copy because nx.network may return reference
         
         def getBondStyle(bondType: BondType) -> tuple[str, str]:
@@ -71,9 +80,13 @@ class Visualize:
         edge_width = 3 if _graph.L == 7 else 2
         font_size = 10 if _graph.L == 7 else 8
         
+        node_num = len(color_map)
+        for i in range(G.nodes.__len__() - node_num):
+            color_map.append("grey")
+        
         nx.draw(G, pos, labels=labels, with_labels=True, 
                 node_size=node_width, font_size=font_size, 
-                node_color = "orange", edgecolors="black",
+                node_color=color_map, edgecolors="black",
                 edge_color=bondColor, width=edge_width, style=bondStyle)    
         # add label of bond edge strength
         if showStrength:

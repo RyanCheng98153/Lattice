@@ -47,6 +47,7 @@ class KagomeGraph:
                     self.nodes[srcId].NodeType = NodeType.Blue
                     self.nodes[srcId].right = None
                     continue
+        self.getAdjList(True)
                     
     def bondGraph(self, _JTriangle:float, _JHexagon: float, _JDimer: float):
         for i in range(0, self.L):
@@ -100,8 +101,16 @@ class KagomeGraph:
                 printStr1 = ''
                 printStr2 = ''
     
-    def getAdjList(self):
+    def getAdjList(self, clean = False):
         adjList = []
+        
+        if clean:
+            index = 0
+            for srcNode in self.nodes:
+                if srcNode != None:
+                    srcNode.clean_id = index
+                    index += 1
+            
         for srcNode in self.nodes:
             if srcNode == None:
                 continue
@@ -110,7 +119,11 @@ class KagomeGraph:
                                                 [srcNode.bottomRight, srcNode.JBottomRight, srcNode.bottomRightType]]:
                 if adjNode == None:
                     continue
-                adjList.append([srcNode.id, adjNode.id, bondStrength, bondType])
+                
+                if clean:
+                    adjList.append([srcNode.clean_id, adjNode.clean_id, bondStrength, bondType])
+                else:
+                    adjList.append([srcNode.id, adjNode.id, bondStrength, bondType])
         
         return adjList
     

@@ -34,6 +34,7 @@ class MLGraph:
                     self.nodes[srcId].bottom = None
                 if self.getIdentify(srcId) == 2:
                     self.nodes[srcId].bottomRight = None
+        self.getAdjList(True)
                     
     def bondGraph(self, _JTriangle:float, _JHexagon: float, _JDimer: float):
         for i in range(0, self.L):
