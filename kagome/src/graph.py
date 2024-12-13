@@ -128,23 +128,10 @@ class KagomeGraph:
         return adjList
     
     def getSpacefileText(self):
-        index = 0
-        for srcNode in self.nodes:
-            if srcNode != None:
-                srcNode.clean_id = index
-                index += 1
+        # spaceText = f"# Model: L {self.L} W {self.W} Kagome Graph" + "\n"
+        spaceText = ""
         
-        spaceText = f"# Model: L {self.L} W {self.W} Kagome Graph" + "\n"
-        for srcNode in self.nodes:
-            if srcNode == None:
-                continue
-            srcId = srcNode.clean_id
-            for adjNode, strength in [[srcNode.right, srcNode.JRight],
-                            [srcNode.bottom, srcNode.JBottom],
-                            [srcNode.bottomRight, srcNode.JBottomRight]]:
-                if adjNode == None:
-                    continue
-                adjId = adjNode.clean_id
-                spaceText += f"{srcId} {adjId} {strength}\n"
+        for srcId, adjId, strength, bondType in self.getAdjList(clean=True):
+            spaceText += f"{srcId} {adjId} {strength}\n"
             
         return spaceText

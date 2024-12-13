@@ -22,9 +22,8 @@ def main():
     # graph.printGraphText()
     # graph.printGraphVisual()
     
-    # with open(file=f"./kagome_L_{L}_{W}.txt", mode="w") as f:
-    #     f.writelines(graph.getSpacefileText())
-    # Test.checkIsingleNode(graph)
+    with open(file=f"./kagome_L_{L}_{W}.txt", mode="w") as f:
+        f.writelines(graph.getSpacefileText())
     
     if len(sys.argv) == 4:
         with open(sys.argv[3], "r") as f:
