@@ -3,8 +3,6 @@ from src.graph import KagomeGraph
 from src.test import Test
 from src.visualize import Visualize
 from src.node import Spin
-from math import sqrt
-from enum import Enum
 from src.node import Spin
 
 def main():
@@ -56,9 +54,6 @@ def main():
         
         qubos = results[i]["qubos"]
         
-        L:int = int(sqrt( len(qubos) ))
-        W:int = L
-
         for node in graph.nodes:
             if node is not None:
                 spin = Spin.UP if qubos[node.clean_id] == 1 else Spin.DOWN
