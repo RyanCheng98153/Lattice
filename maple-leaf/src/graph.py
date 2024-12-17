@@ -1,5 +1,5 @@
 from src.node import Node, BondType
-from src.helper import PrintHelper, NodeHelper
+from src.helper import NodeHelper
 from typing import List
 
 class MLGraph:
@@ -98,32 +98,6 @@ class MLGraph:
                     self.nodes[srcId].bottomRightType = BondType.Triangle
                     continue
                 
-                
-    def printGraphText(self):
-        for i, node in enumerate(self.nodes):
-            if node == None:
-                print( f"[Node {i}]: spin: {None}\n" )
-                continue
-            node.printNodeText()
-            
-    def printGraphVisual(self):
-        printStr1 = ''
-        printStr2 = ''
-        for index, node in enumerate(self.nodes):
-            if node == None:
-                printStr1 += ( PrintHelper.getPrettyId(None) + '   '  )
-                printStr2 += ( '     ' + '   '  )
-            else:
-                tmp1, tmp2 = node.printNodeVisual(False)
-                printStr1 += tmp1
-                printStr2 += tmp2
-                
-            if index % self.W == self.W-1:
-                print(printStr1)
-                print(printStr2)
-                printStr1 = ''
-                printStr2 = ''
-    
     def getAdjList(self, clean = False):
         adjList = []
         

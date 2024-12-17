@@ -34,20 +34,3 @@ class NodeHelper:
         i, j = self.getCood(_id)
         return self.getId( (i+1) % self.L, (j+1) % self.W )
 
-
-class PrintHelper:
-    def __init__(self) -> None:
-        pass
-    
-    @staticmethod
-    def getPrettyId( _id ):
-        if _id == None:
-            return "[   ]"
-        elif _id < 10:
-            return "[ " + str(_id) + " ]"
-        elif _id < 100:
-            return "[ " + str(_id) + "]"
-        elif _id < 1000:
-            return "["  + str(_id) + "]"
-        else:
-            return "[INF]"
