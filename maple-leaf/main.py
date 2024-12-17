@@ -19,8 +19,6 @@ def main():
     # graph.printGraphText()
     # graph.printGraphVisual()
     
-    # with open(file=f"./mapleleaf_L_{L}_{W}.txt", mode="w") as f:
-    #     f.writelines(graph.getSpacefileText())
     
     if len(sys.argv) == 4:
         with open(sys.argv[3], "r") as f:
@@ -58,7 +56,10 @@ def main():
     
         Visualize.visualize(graph, labelHexagon=False, showStrength=False, fromfile=True)    
     else:    
+        # with open(file=f"./mapleleaf_L_{L}_{W}.txt", mode="w") as f:
+        #     f.writelines(graph.getSpacefileText())
         Visualize.visualize(graph, labelHexagon=False, showStrength=False)
+        
     
 if __name__ == "__main__":
     main()

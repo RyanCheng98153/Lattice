@@ -1,5 +1,5 @@
 import sys
-from src.graph import KagomeGraph
+from src.graph import TrianglularGraph
 from src.visualize import Visualize
 from src.node import Spin
 from src.node import Spin
@@ -15,11 +15,9 @@ def main():
     # if (len(sys.argv) > 3):
     #     hexInit = int(sys.argv[3])
     
-    graph = KagomeGraph(L, W, hexInit)
+    graph = TrianglularGraph(L, W)
     graph.makeGraph()
-    graph.bondGraph(1.0, 1.0, 1.0)
-    # graph.printGraphText()
-    # graph.printGraphVisual()
+    graph.bondGraph(1.0)
     
     if len(sys.argv) == 4:
         with open(sys.argv[3], "r") as f:
@@ -54,11 +52,13 @@ def main():
                 spin = Spin.UP if qubos[node.clean_id] == 1 else Spin.DOWN
                 node.spin = spin
             # print((node.clean_id, node.spin) if node is not None else None)
-        Visualize.visualize(graph, labelHexagon=False, showStrength=False, fromfile=True)
+        Visualize.visualize(graph, showStrength=False, fromfile=True)
+        pass
     else:
-        # with open(file=f"./kagome_L_{L}_{W}.txt", mode="w") as f:
+        # with open(file=f"./triangular_L_{L}_{W}.txt", mode="w") as f:
         #     f.writelines(graph.getSpacefileText())
-        Visualize.visualize(graph, labelHexagon=False, showStrength=False)
+        Visualize.visualize(graph, showStrength=False)
+        pass
     
 if __name__ == "__main__":
     main()
