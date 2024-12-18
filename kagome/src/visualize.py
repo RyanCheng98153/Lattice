@@ -10,7 +10,7 @@ class Visualize:
         pass
     
     @staticmethod
-    def visualize( _graph: KagomeGraph, labelHexagon = False, showStrength=False, fromfile=False ):
+    def visualize( _graph: KagomeGraph, labelHexagon = False, showStrength=False, fromfile=False, save_fig=False ):
         G: nx.Graph = nx.empty_graph( n=0 )
         
         def getPosition (_id):
@@ -122,4 +122,7 @@ class Visualize:
         if showStrength:
             nx.draw_networkx_edge_labels(G,pos,edge_labels=weight_labels)
         
-        plt.show()
+        if save_fig:
+            plt.savefig(f"./fig_kagome_{_graph.L}_{_graph.L}.png", format='png', bbox_inches='tight')
+        else:
+            plt.show()

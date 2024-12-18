@@ -10,7 +10,7 @@ class Visualize:
         pass
     
     @staticmethod
-    def visualize( _graph: MLGraph, labelHexagon = False, showStrength=False, fromfile=False ):
+    def visualize( _graph: MLGraph, labelHexagon = False, showStrength=False, fromfile=False, save_fig=False ):
         G: nx.Graph = nx.empty_graph( n=0 )
         
         def getPosition (_id):
@@ -106,24 +106,7 @@ class Visualize:
         if showStrength:
             nx.draw_networkx_edge_labels(G,pos,edge_labels=weight_labels)
         
-        plt.show()
-
-    @staticmethod
-    def visualizeTriangular( _graph: MLGraph ):
-        G:nx.Graph = nx.empty_graph( n=0 )
-        # exists nodes
-        G.add_nodes_from((i, j) for i in range(_graph.W) for j in range(_graph.L))
-        nodelist = deepcopy(G.nodes())
-        # right
-        G.add_edges_from(((i, j), (i+1, j)) for i in range(_graph.W-1) for j in range(_graph.L))
-        # button
-        G.add_edges_from(((i, j), (i, j+1)) for i in range(_graph.W) for j in range(_graph.L-1))
-        # button right
-        G.add_edges_from(((i, j), (i+1, j-1)) for i in range(_graph.W) for j in range(_graph.L))
-        
-        pos = dict( (n, n) for n in G.nodes() ) #Dictionary of all positions
-        labels = dict( ((i, j), i + (_graph.L-1-j) * _graph.W ) for i, j in nodelist )
-        # print(labels)
-        nx.draw_networkx(G, pos=pos, labels=labels,with_labels=True, node_size=10)
-        # nx.draw_networkx(G) 
-        plt.show() 
+        if save_fig:
+            plt.savefig(f"./fig_mapleleaf_{_graph.L}_{_graph.L}.png", format='png', bbox_inches='tight')
+        else:
+            plt.show()

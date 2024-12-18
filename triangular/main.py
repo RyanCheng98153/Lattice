@@ -52,12 +52,12 @@ def main():
                 spin = Spin.UP if qubos[node.clean_id] == 1 else Spin.DOWN
                 node.spin = spin
             # print((node.clean_id, node.spin) if node is not None else None)
-        Visualize.visualize(graph, showStrength=False, fromfile=True)
+        Visualize.visualize(graph, showStrength=False, fromfile=True, save_fig=True)
         pass
     else:
         # with open(file=f"./triangular_L_{L}_{W}.txt", mode="w") as f:
         #     f.writelines(graph.getSpacefileText())
-        Visualize.visualize(graph, showStrength=False)
+        Visualize.visualize(graph, showStrength=False, save_fig=True)
         pass
     
 if __name__ == "__main__":

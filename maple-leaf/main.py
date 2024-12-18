@@ -54,11 +54,11 @@ def main():
                 node.spin = spin
             # print((node.clean_id, node.spin) if node is not None else None)
     
-        Visualize.visualize(graph, labelHexagon=False, showStrength=False, fromfile=True)    
+        Visualize.visualize(graph, labelHexagon=False, showStrength=False, fromfile=True, save_fig=True)
     else:    
         # with open(file=f"./mapleleaf_L_{L}_{W}.txt", mode="w") as f:
         #     f.writelines(graph.getSpacefileText())
-        Visualize.visualize(graph, labelHexagon=False, showStrength=False)
+        Visualize.visualize(graph, labelHexagon=False, showStrength=False, save_fig=True)
         
     
 if __name__ == "__main__":
