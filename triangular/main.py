@@ -2,7 +2,6 @@ import sys
 from src.graph import TrianglularGraph
 from src.visualize import Visualize
 from src.node import Spin
-from src.node import Spin
 import argparse
 
 def main(args: argparse.Namespace):
