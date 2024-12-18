@@ -57,7 +57,6 @@ def main(args: argparse.Namespace):
                 spin = Spin.UP if qubos[node.clean_id] == 1 else Spin.DOWN
                 node.spin = spin
             # print((node.clean_id, node.spin) if node is not None else None)
-        print(args.saveFig)
         Visualize.visualize(graph, showStrength=False, fromfile=True, save_fig=args.saveFig)
         pass
     else:
