@@ -3,6 +3,7 @@ from src.graph import MLGraph
 from src.visualize import Visualize
 from src.node import Spin
 import argparse
+from src.analysis import Analysis
     
 def main(arge: argparse.Namespace):
     L:int = 6
@@ -59,7 +60,9 @@ def main(arge: argparse.Namespace):
                 spin = Spin.UP if qubos[node.clean_id] == 1 else Spin.DOWN
                 node.spin = spin
             # print((node.clean_id, node.spin) if node is not None else None)
-    
+
+        Analysis.get_triangular_Energy(graph)
+
         Visualize.visualize(graph, labelHexagon=False, showStrength=False, fromfile=True, save_fig=args.saveFig)
         pass
     else:    

@@ -124,4 +124,5 @@ class Visualize:
         
         if save_fig:
             plt.savefig(f"./fig_kagome_{_graph.L}_{_graph.L}.png", format='png', bbox_inches='tight')
-        # plt.show()
+        else:
+            plt.show()

@@ -99,4 +99,5 @@ class Visualize:
         
         if save_fig:
             plt.savefig(f"./fig_triangular_{_graph.L}_{_graph.L}.pdf", format='pdf', bbox_inches='tight')
-        # plt.show()
+        else:
+            plt.show()

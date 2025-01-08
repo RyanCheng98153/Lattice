@@ -27,9 +27,9 @@ class Node:
         self.bottom     :Node = None
         self.bottomRight:Node = None
         
-        self.JRight      :float = 0.0
-        self.JBottom     :float = 0.0
-        self.JBottomRight:float = 0.0
+        self.JRight      :float = 1.0
+        self.JBottom     :float = 1.0
+        self.JBottomRight:float = 1.0
         
         self.rightType         :BondType = None
         self.bottomType        :BondType = None
