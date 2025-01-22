@@ -18,16 +18,19 @@ pip install -r ./requirements.txt
 ## Run Examples
 - Triangular Script Example:
     ```bash
-    python ./triangular/main.py -L 3 -W 3 --saveFig --inputFile ./results/triangular/HYBRID/tri_L102_JL_1.0_HYBRID_sam1_.txt
+    python ./triangular/main.py -L 3 -W 3 --inputFile ./results/triangular/HYBRID/tri_L102_JL_1.0_HYBRID_sam1_.txt
     ```
 - Kagome Script Example:
     ```bash
-    python ./kagome/main.py -L 12 -W 12 --saveFig --inputFile ./results/kagome/HYBRID/kagome_L_12_12_HYBRID_sam1_.txt
+    python ./kagome/main.py -L 12 -W 12 --inputFile ./results/kagome/HYBRID/kagome_L_12_12_HYBRID_sam1_.txt
     ```
 - MapleLeaf Script Example::
     ```bash
-    python ./triangular/main.py -L 3 -W 3 --saveFig --inputFile ./results/triangular/HYBRID/tri_L102_JL_1.0_HYBRID_sam1_.txt
+    python ./maple-leaf/main.py -L 7 -W 7 --inputFile ./results/mapleleaf/HYBRID/mapleleaf_L_7_7_HYBRID_sam1_.txt
     ```
+
+> [!Note]
+> add `--saveFig` if want to save Figure
 
 
 ## Regulation of Lattice 

@@ -20,7 +20,7 @@ pip install -r ./requirements.txt
     ex: - `python .\main.py 7 7 1`
     - customize the hexagon initial position, default: 0 -->
 
-- python ./maple-leaf/main.py -L 7 -W 7 --inputFile ./results/mapleleaf/HYBRID/mapleleaf_L_7_7_HYBRID_sam1_.txt
+- `python ./maple-leaf/main.py -L 7 -W 7 --inputFile ./results/mapleleaf/HYBRID/mapleleaf_L_7_7_HYBRID_sam1_.txt`
 
 ## Visualize Figure Examples
 - Maple Leaf Lattice (Visualize with Networkx Graph)

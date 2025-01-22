@@ -26,11 +26,13 @@ class Analysis:
                 energy += Analysis.getSpinValue(node.spin) * Analysis.getSpinValue(node.bottomRight.spin) * node.JBottomRight
                 energy += Analysis.getSpinValue(node.right.spin) * Analysis.getSpinValue(node.bottomRight.spin) * node.right.JBottom
                 
-                tri_spins = Analysis.getSpinValue(node.spin) 
-                tri_spins += Analysis.getSpinValue(node.right.spin) 
-                tri_spins += Analysis.getSpinValue(node.bottomRight.spin)
+                tri_spins = [
+                    Analysis.getSpinValue(node.spin) ,
+                    Analysis.getSpinValue(node.right.spin) ,
+                    Analysis.getSpinValue(node.bottomRight.spin)
+                ]
                 
-                triangular_energy.append((tri_nodes, energy, tri_spins))
+                triangular_energy.append((tri_nodes, tri_spins, energy))
             
             # triangle spin = node, bottom, bottomRight
             if node.bottomType == BondType.Connected and node.bottomRightType == BondType.Connected:
@@ -41,13 +43,18 @@ class Analysis:
                 energy += Analysis.getSpinValue(node.spin) * Analysis.getSpinValue(node.bottomRight.spin) * node.JBottomRight
                 energy += Analysis.getSpinValue(node.bottom.spin) * Analysis.getSpinValue(node.bottomRight.spin) * node.bottom.JRight
                 
-                triangular_energy.append((tri_nodes, energy, tri_spins))
+                tri_spins = [
+                    Analysis.getSpinValue(node.spin) ,
+                    Analysis.getSpinValue(node.bottom.spin) ,
+                    Analysis.getSpinValue(node.bottomRight.spin)
+                ]
+                
+                triangular_energy.append((tri_nodes, tri_spins, energy))
                 
         # print(triangular_energy)
-        # for i, (tri_nodes, energy, tri_spins) in enumerate(triangular_energy):
-        #     print(i, ")", tri_nodes, energy, tri_spins)
+        for i, (tri_nodes, tri_spins, energy) in enumerate(triangular_energy):
+            print(i, ")", tri_nodes, tri_spins, energy)
         
-        print("Total Energy:", sum([energy for tri_nodes, energy, tri_spins in triangular_energy]))
-        print("Total Spin:", sum([tri_spins for tri_nodes, energy, tri_spins in triangular_energy]))
+        print("Total Energy:", sum([energy for tri_nodes, tri_spins, energy in triangular_energy]))
         
         return triangular_energy
