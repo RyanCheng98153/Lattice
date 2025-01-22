@@ -11,14 +11,16 @@ pip install -r ./requirements.txt
 ```
 
 ## usage
-- `python ./main.py [-L] [-W]`
+<!-- - `python ./main.py [-L] [-W]`
   - ex: `python .\main.py 7 7`
   - `[-L]` and `[-W]` are suggested to be multiples of 7
   - otherwise, the periodic of maple-leaf may not show in correct pattern
 
 - `python ./main.py [-L] [-W] [-hexinit]`
     ex: - `python .\main.py 7 7 1`
-    - customize the hexagon initial position, default: 0
+    - customize the hexagon initial position, default: 0 -->
+
+- python ./maple-leaf/main.py -L 7 -W 7 --inputFile ./results/mapleleaf/HYBRID/mapleleaf_L_7_7_HYBRID_sam1_.txt
 
 ## Visualize Figure Examples
 - Maple Leaf Lattice (Visualize with Networkx Graph)
