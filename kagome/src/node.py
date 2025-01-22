@@ -14,6 +14,7 @@ class BondType(Enum):
     Triangle = 0
     Hexagon = 1
     Dimer = 2
+    Connected = 3
     
 class Node:
     def __init__(self, _id:int):

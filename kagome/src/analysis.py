@@ -1,4 +1,4 @@
-from src.graph import MLGraph
+from src.graph import KagomeGraph
 from src.node import BondType, Spin
 
 class Analysis:
@@ -10,7 +10,7 @@ class Analysis:
         return 1 if spin == Spin.UP else -1
     
     @staticmethod
-    def get_triangular_Energy(graph:MLGraph) -> float:
+    def get_triangular_Energy(graph:KagomeGraph) -> float:
         triangular_energy: list[tuple[list[int], float]] = []
         
         for node in graph.nodes:
@@ -18,7 +18,7 @@ class Analysis:
                 continue
             
             # triangle spin = node, right, bottomRight
-            if node.rightType == BondType.Triangle and node.bottomRightType == BondType.Triangle:
+            if node.rightType == BondType.Connected and node.bottomRightType == BondType.Connected:
                 energy = 0.0
                 
                 tri_nodes = [node.clean_id, node.right.clean_id, node.bottomRight.clean_id]
@@ -27,23 +27,19 @@ class Analysis:
                 energy += Analysis.getSpinValue(node.right.spin) * Analysis.getSpinValue(node.bottomRight.spin) * node.right.JBottom
                 
                 tri_spins = Analysis.getSpinValue(node.spin) 
-                + Analysis.getSpinValue(node.right.spin) 
-                + Analysis.getSpinValue(node.bottomRight.spin)
+                tri_spins += Analysis.getSpinValue(node.right.spin) 
+                tri_spins += Analysis.getSpinValue(node.bottomRight.spin)
                 
                 triangular_energy.append((tri_nodes, energy, tri_spins))
             
             # triangle spin = node, bottom, bottomRight
-            if node.bottomType == BondType.Triangle and node.bottomRightType == BondType.Triangle:
+            if node.bottomType == BondType.Connected and node.bottomRightType == BondType.Connected:
                 energy = 0.0
                 
                 tri_nodes = [node.clean_id, node.bottom.clean_id, node.bottomRight.clean_id]
                 energy += Analysis.getSpinValue(node.spin) * Analysis.getSpinValue(node.bottom.spin) * node.JBottom
                 energy += Analysis.getSpinValue(node.spin) * Analysis.getSpinValue(node.bottomRight.spin) * node.JBottomRight
                 energy += Analysis.getSpinValue(node.bottom.spin) * Analysis.getSpinValue(node.bottomRight.spin) * node.bottom.JRight
-                
-                tri_spins = Analysis.getSpinValue(node.spin) 
-                + Analysis.getSpinValue(node.bottom.spin) 
-                + Analysis.getSpinValue(node.bottomRight.spin)
                 
                 triangular_energy.append((tri_nodes, energy, tri_spins))
                 

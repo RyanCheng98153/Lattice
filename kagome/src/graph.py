@@ -1,4 +1,4 @@
-from src.node import Node, NodeType
+from src.node import Node, NodeType, BondType
 from src.helper import NodeHelper
 from typing import List
 
@@ -26,20 +26,21 @@ class KagomeGraph:
                 srcId = self.helper.getId(i, j)
                 # Hexagon center hole
                 if self.getIdentify(srcId) == 3:
+                    self.nodes[srcId].NodeType = NodeType.Center
                     self.nodes[srcId] = None
                     continue
                 self.nodes[srcId].right = self.nodes[self.helper.getRight(srcId)]
                 self.nodes[srcId].bottom = self.nodes[self.helper.getBottom(srcId)]
                 self.nodes[srcId].bottomRight = self.nodes[self.helper.getBottomRight(srcId)]
                 
-                # Green
+                # Red 
                 if self.getIdentify(srcId) == 0:
-                    self.nodes[srcId].NodeType = NodeType.Green
+                    self.nodes[srcId].NodeType = NodeType.Red
                     self.nodes[srcId].bottomRight = None
                     continue
-                # Red 
+                # Green
                 if self.getIdentify(srcId) == 1:
-                    self.nodes[srcId].NodeType = NodeType.Red
+                    self.nodes[srcId].NodeType = NodeType.Green
                     self.nodes[srcId].bottom = None
                     continue
                 # Blue
@@ -49,7 +50,7 @@ class KagomeGraph:
                     continue
         self.getAdjList(True)
                     
-    def bondGraph(self, _JTriangle:float, _JHexagon: float, _JDimer: float):
+    def bondGraph(self, _JLayer: float):
         for i in range(0, self.L):
             for j in range(0, self.W):
                 srcId = self.helper.getId(i, j)
@@ -62,17 +63,23 @@ class KagomeGraph:
                 # is a regular node
                 srcNode = self.nodes[srcId]
                 
-                if srcNode.NodeType == NodeType.Green:
-                    srcNode.JRight = _JHexagon
-                    srcNode.JBottom = _JHexagon
-                    continue
                 if srcNode.NodeType == NodeType.Red:
-                    srcNode.JRight = _JHexagon
-                    srcNode.JBottomRight = _JHexagon
+                    srcNode.JRight = _JLayer
+                    srcNode.JBottom = _JLayer
+                    srcNode.rightType = BondType.Connected
+                    srcNode.bottomType = BondType.Connected
+                    continue
+                if srcNode.NodeType == NodeType.Green:
+                    srcNode.JRight = _JLayer
+                    srcNode.JBottomRight = _JLayer
+                    srcNode.rightType = BondType.Connected
+                    srcNode.bottomRightType = BondType.Connected
                     continue
                 if srcNode.NodeType == NodeType.Blue:
-                    srcNode.JBottom = _JHexagon
-                    srcNode.JBottomRight = _JHexagon
+                    srcNode.JBottom = _JLayer
+                    srcNode.JBottomRight = _JLayer
+                    srcNode.bottomType = BondType.Connected
+                    srcNode.bottomRightType = BondType.Connected
                     continue
                 
     def getAdjList(self, clean = False):
@@ -93,7 +100,6 @@ class KagomeGraph:
                                                 [srcNode.bottomRight, srcNode.JBottomRight, srcNode.bottomRightType]]:
                 if adjNode == None:
                     continue
-                
                 if clean:
                     adjList.append([srcNode.clean_id, adjNode.clean_id, bondStrength, bondType])
                 else:

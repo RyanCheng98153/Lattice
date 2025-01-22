@@ -4,7 +4,33 @@ from src.visualize import Visualize
 from src.node import Spin
 import argparse
 from src.analysis import Analysis
+
+def getFileQubos(inputFile: str):
+    with open(inputFile, "r") as f:
+        datas = [line for line in f.readlines() if not line.startswith("#")]
     
+    ids = [int(id) for id in datas[0].split()[:-2]]
+    
+    results = []
+    for data in datas[1:]:
+        if data.startswith("['SPIN'"):
+            break
+        if not data[0].isdigit():
+            continue
+        
+        items = data.split()
+        qubos = [ -1 if var == "-1" else 1 for var in items[1:-2] ]
+        energy = items[-2]
+        
+        if energy.startswith("-"):
+            energy = -1 * float(energy[1:])
+        else:
+            energy = float(energy)
+        
+        results.append( { "qubos": qubos, "energy": energy })
+        
+    return results
+
 def main(arge: argparse.Namespace):
     L:int = 6
     W:int = 6
@@ -28,32 +54,9 @@ def main(arge: argparse.Namespace):
     # if len(sys.argv) == 4:
     if args.inputFile is not None:
         # with open(sys.argv[3], "r") as f:
-        with open(args.inputFile, "r") as f:
-            datas = f.readlines()
+        results = getFileQubos(args.inputFile)
         
-        ids = [int(id) for id in datas[0].split()[:-2]]
-        
-        results = []
-        for data in datas[1:]:
-            if data.startswith("['SPIN'"):
-                break
-            if not data[0].isdigit():
-                continue
-            
-            items = data.split()
-            qubos = [ -1 if var == "-1" else 1 for var in items[1:-2] ]
-            energy = items[-2]
-            
-            if energy.startswith("-"):
-                energy = -1 * float(energy[1:])
-            else:
-                energy = float(energy)
-            
-            results.append( { "qubos": qubos, "energy": energy })
-        
-        i = 0
-        
-        qubos = results[i]["qubos"]
+        qubos = results[0]["qubos"]
         
         for node in graph.nodes:
             if node is not None:

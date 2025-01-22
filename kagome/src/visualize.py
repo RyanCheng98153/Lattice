@@ -59,7 +59,7 @@ class Visualize:
                 return "red", "-"
             
         for srcId, adjId, bondStrength, bondType in _graph.getAdjList():
-            if bondType == None:
+            if bondType == None or bondType == BondType.Connected:
                 bondColor, bondStyle = "black", "-"
             else:
                 bondColor, bondStyle = getBondStyle(bondType)
@@ -124,5 +124,5 @@ class Visualize:
         
         if save_fig:
             plt.savefig(f"./fig_kagome_{_graph.L}_{_graph.L}.png", format='png', bbox_inches='tight')
-        else:
-            plt.show()
+        # else:
+            # plt.show()
