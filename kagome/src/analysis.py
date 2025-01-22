@@ -44,8 +44,8 @@ class Analysis:
                 triangular_energy.append((tri_nodes, energy, tri_spins))
                 
         # print(triangular_energy)
-        for i, (tri_nodes, energy, tri_spins) in enumerate(triangular_energy):
-            print(i, ")", tri_nodes, energy, tri_spins)
+        # for i, (tri_nodes, energy, tri_spins) in enumerate(triangular_energy):
+        #     print(i, ")", tri_nodes, energy, tri_spins)
         
         print("Total Energy:", sum([energy for tri_nodes, energy, tri_spins in triangular_energy]))
         print("Total Spin:", sum([tri_spins for tri_nodes, energy, tri_spins in triangular_energy]))
