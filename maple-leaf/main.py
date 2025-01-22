@@ -40,20 +40,14 @@ def main(arge: argparse.Namespace):
     L:int = args.L
     W:int = args.W
     
-    hexInit:int = 0
-    # if (len(sys.argv) > 3):
-    #     hexInit = int(sys.argv[3])
-    
-    graph:MLGraph = MLGraph(L, W, hexInit)
+    graph:MLGraph = MLGraph(L, W, 0)
     graph.makeGraph()
     # graph.bondGraph(3.0, 6.0, 2.0)
     graph.bondGraph(1.0, 1.0, 1.0)
     # graph.printGraphText()
     # graph.printGraphVisual()
     
-    # if len(sys.argv) == 4:
     if args.inputFile is not None:
-        # with open(sys.argv[3], "r") as f:
         results = getFileQubos(args.inputFile)
         
         qubos = results[0]["qubos"]
