@@ -72,7 +72,7 @@ def main(arge: argparse.Namespace):
         
     
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Triangular Graph")
+    parser = argparse.ArgumentParser(description="MapleLeaf Graph")
     parser.add_argument("-L", type=int, help="Lattice size")
     parser.add_argument("-W", type=int, help="Lattice size")
     parser.add_argument("--inputFile", required=False, type=str, help="file path")
