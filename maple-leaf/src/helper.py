@@ -4,6 +4,11 @@ class NodeHelper:
         self.W:int = _W
     
     def getCood(self, _id):
+        """
+        return (i, j) format coordinate
+        i: row index, from 0 to L-1, the top is 0
+        j: column index from 0 to W-1, the left is 0
+        """
         return _id // self.W, _id % self.W
     
     def getId(self, _i, _j):
