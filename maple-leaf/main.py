@@ -58,7 +58,8 @@ def main(arge: argparse.Namespace):
                 node.spin = spin
             # print((node.clean_id, node.spin) if node is not None else None)
 
-        Analysis.get_triangular_Energy(graph)
+        # Analysis.get_triangular_Energy(graph)
+        Analysis.get_ordered_parameters(graph)
 
         Visualize.visualize(graph, labelHexagon=False, showStrength=False, fromfile=True, save_fig=args.saveFig)
         pass
