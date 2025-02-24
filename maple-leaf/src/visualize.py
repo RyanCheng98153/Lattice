@@ -10,7 +10,7 @@ class Visualize:
         pass
     
     @staticmethod
-    def visualize( _graph: MLGraph, labelHexagon = False, showStrength=False, fromfile=False, save_fig=False ):
+    def visualize( _graph: MLGraph, labelHexagon = False, showStrength=False, fromfile=False, save_fig=False, use_order=False ):
         G: nx.Graph = nx.empty_graph( n=0 )
         
         def getPosition (_id):
@@ -24,11 +24,22 @@ class Visualize:
             if spin == Spin.DOWN:
                 return "blue"
         
+        def getOrderColor(id: int) -> str:
+            i, j = _graph.helper.getCood(id)
+            
+            return {
+                0: "red",
+                1: "blue",
+                2: "black"
+            }.get(( i+j+1 ) % 3)
+        
         # add MLGraphs nodes to networkx graph
         if labelHexagon:
             G.add_nodes_from( getPosition( id ) for id in range(len(_graph.nodes)) )
             if fromfile:
                 color_map = [getSpinColor(node.spin)  if node is not None else "grey" for node in _graph.nodes]
+            elif use_order:
+                color_map = [getOrderColor(node.id) if node is not None else "grey" for node in _graph.nodes]
             else:
                 color_map = ["lightgray"  if node is not None else "grey" for node in _graph.nodes]
                 # get spin color
@@ -39,6 +50,8 @@ class Visualize:
             G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
             if fromfile:
                 color_map = [getSpinColor(node.spin) for node in _graph.nodes if node is not None]
+            if fromfile:
+                color_map = [getOrderColor(node.id) for node in _graph.nodes if node is not None]
             else:
                 color_map = ["lightgray" for node in _graph.nodes if node is not None]
                 # get spin color

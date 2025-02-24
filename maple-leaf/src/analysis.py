@@ -91,7 +91,7 @@ class Analysis:
                 0: "red",
                 1: "blue",
                 2: "black"
-            }.get(( 2*i+j ) % 3)
+            }.get(( i+j+1 ) % 3)
             
             if node.spin == Spin.UP:
                 color_parameter[color][0] += 1
