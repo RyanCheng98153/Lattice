@@ -1,6 +1,6 @@
 import sys
 from src.graph import MLGraph
-from src.visualize import Visualize
+from src.visualize import Visualize, DisplayType
 from src.node import Spin
 import argparse
 from src.analysis import Analysis
@@ -61,11 +61,14 @@ def main(arge: argparse.Namespace):
         # Analysis.get_triangular_Energy(graph)
         Analysis.get_ordered_parameters(graph)
 
-        Visualize.visualize(graph, labelHexagon=False, showStrength=False, fromfile=True, save_fig=args.saveFig)
-        pass
-    else:    
-        Visualize.visualize(graph, labelHexagon=False, showStrength=False, save_fig=args.saveFig)
-        pass
+    # check if the args.display_type match DisplayType's value
+    display_type = {
+        "plain": DisplayType.PLAIN,
+        "spinfile": DisplayType.SPIN_FILE,
+        "orderP": DisplayType.ORDER_PARAMETERS
+    }.get(args.displayType)
+    
+    Visualize.visualize(graph, labelHexagon=False, showStrength=False, save_fig=args.saveFig, display_type=display_type)
     
     if args.saveLattice:
         with open(file=f"./mapleleaf_L_{L}_{W}.txt", mode="w") as f:
@@ -76,8 +79,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MapleLeaf Graph")
     parser.add_argument("-L", type=int, help="Lattice size")
     parser.add_argument("-W", type=int, help="Lattice size")
-    parser.add_argument("--inputFile", required=False, type=str, help="file path")
+    parser.add_argument("--inputFile", required=False, default=None, type=str, help="file path")
     parser.add_argument("--saveFig", required=False, default=False , action="store_true", help="save figure")
     parser.add_argument("--saveLattice", required=False, default=False , action="store_true", help="save lattice file")
+    parser.add_argument("--displayType", required=False, default=None, type=str, help="display type (plain, spinfile, orderP)")
     args = parser.parse_args()
+    
+    if args.displayType is None:
+        if args.inputFile is None:
+            args.displayType = "plain"
+        else:
+            args.displayType = "spinfile"
+        
     main(args)

@@ -4,14 +4,34 @@ import matplotlib.pyplot as plt
 from src.graph import MLGraph
 from src.node import BondType, Spin
 from math import sqrt
+from enum import Enum
+
+class DisplayType(Enum):
+    PLAIN = "plain"
+    SPIN_FILE = "spinfile"
+    ORDER_PARAMETERS = "orderP"
+    
+    def description(self):
+        descriptions = {
+            self.PLAIN: "Displaying theorical graph with no styling",
+            self.SPIN_FILE: "Displaying spin of input file",
+            self.ORDER_PARAMETERS: "Displaying order parameters",
+        }
+        return descriptions[self]
  
 class Visualize:
     def __init__(self) -> None:
         pass
     
     @staticmethod
-    def visualize( _graph: MLGraph, labelHexagon = False, showStrength=False, fromfile=False, save_fig=False, use_order=False ):
+    def visualize(
+        _graph: MLGraph, 
+        labelHexagon = False, showStrength=False, save_fig=False, 
+        display_type: DisplayType = DisplayType.PLAIN
+    ):
         G: nx.Graph = nx.empty_graph( n=0 )
+        
+        print(display_type)
         
         def getPosition (_id):
             y, x = _id // _graph.W, _id % _graph.W
@@ -36,27 +56,27 @@ class Visualize:
         # add MLGraphs nodes to networkx graph
         if labelHexagon:
             G.add_nodes_from( getPosition( id ) for id in range(len(_graph.nodes)) )
-            if fromfile:
+            if display_type == DisplayType.PLAIN:
+                color_map = ["lightgray"  if node is not None else "grey" for node in _graph.nodes]
+            elif display_type == DisplayType.SPIN_FILE:
                 color_map = [getSpinColor(node.spin)  if node is not None else "grey" for node in _graph.nodes]
-            elif use_order:
+            elif display_type == DisplayType.ORDER_PARAMETERS:
                 color_map = [getOrderColor(node.id) if node is not None else "grey" for node in _graph.nodes]
             else:
-                color_map = ["lightgray"  if node is not None else "grey" for node in _graph.nodes]
-                # get spin color
-                # color_map = [getSpinColor(node.spin)  if node is not None else "grey" for node in _graph.nodes]
-                
+                raise ValueError("Invalid display type")
+            
         else:
             # ignore the hexagon None ndoes
             G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
-            if fromfile:
+            if display_type == DisplayType.PLAIN:
+                color_map = ["lightgray" for node in _graph.nodes if node is not None]
+            elif display_type == DisplayType.SPIN_FILE:
                 color_map = [getSpinColor(node.spin) for node in _graph.nodes if node is not None]
-            if fromfile:
+            elif display_type == DisplayType.ORDER_PARAMETERS:
                 color_map = [getOrderColor(node.id) for node in _graph.nodes if node is not None]
             else:
-                color_map = ["lightgray" for node in _graph.nodes if node is not None]
-                # get spin color
-                # color_map = [getSpinColor(node.spin) for node in _graph.nodes if node is not None]
-                
+                raise ValueError("Invalid display type")    
+            
         nodelist = deepcopy(G.nodes()) # using deep copy not shallow copy because nx.network may return reference
         
         def getBondStyle(bondType: BondType) -> tuple[str, str]:
@@ -106,9 +126,12 @@ class Visualize:
         # color of periodic nodes
         node_num = len(color_map)
         for i in range(G.nodes.__len__() - node_num):
-            if fromfile:
+            
+            if DisplayType.SPIN_FILE:
                 color_map.append("gray")
-            else:
+            elif DisplayType.ORDER_PARAMETERS:
+                color_map.append("gray")
+            elif DisplayType.PLAIN:
                 color_map.append("orange")
         
         nx.draw(G, pos, labels=labels, with_labels=True, 
