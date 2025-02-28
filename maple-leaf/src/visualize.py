@@ -50,7 +50,7 @@ class Visualize:
             return {
                 0: "red",
                 1: "blue",
-                2: "black"
+                2: "lightgreen"
             }.get(( i+j+1 ) % 3)
         
         # add MLGraphs nodes to networkx graph
@@ -79,7 +79,9 @@ class Visualize:
             
         nodelist = deepcopy(G.nodes()) # using deep copy not shallow copy because nx.network may return reference
         
-        def getBondStyle(bondType: BondType) -> tuple[str, str]:
+        def getBondStyle(bondType: BondType, no_color = True) -> tuple[str, str]:
+            if no_color:
+                return "gray", "-"
             if bondType == BondType.Hexagon:
                 return "blue", "-"
             if bondType == BondType.Triangle:
@@ -123,6 +125,10 @@ class Visualize:
         edge_width = 3 if _graph.L == 7 else 2
         font_size = 10 if _graph.L == 7 else 8
         
+        # small node with no font size
+        node_width = 100
+        show_labels = False
+        
         # color of periodic nodes
         node_num = len(color_map)
         for i in range(G.nodes.__len__() - node_num):
@@ -134,7 +140,7 @@ class Visualize:
             elif DisplayType.PLAIN:
                 color_map.append("orange")
         
-        nx.draw(G, pos, labels=labels, with_labels=True, 
+        nx.draw(G, pos, labels=labels, with_labels=show_labels, 
                 node_size=node_width, font_size=font_size, 
                 node_color=color_map, edgecolors="black",
                 edge_color=bondColor, width=edge_width, style=bondStyle)    
@@ -143,6 +149,6 @@ class Visualize:
             nx.draw_networkx_edge_labels(G,pos,edge_labels=weight_labels)
         
         if save_fig:
-            plt.savefig(f"./fig_mapleleaf_{_graph.L}_{_graph.L}.png", format='png', bbox_inches='tight')
+            plt.savefig(f"./fig_mapleleaf_{_graph.L}_{_graph.L}.pdf", format='pdf', bbox_inches='tight')
         # else:
         #     plt.show()
