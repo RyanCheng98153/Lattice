@@ -39,7 +39,6 @@ def main(arge: argparse.Namespace):
     
     graph:MLGraph = MLGraph(L, W, 0)
     graph.makeGraph()
-    # graph.bondGraph(3.0, 6.0, 2.0)
     graph.bondGraph(1.0, 1.0, 1.0)
     
     if args.inputFile is not None:

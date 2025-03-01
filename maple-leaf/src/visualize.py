@@ -31,8 +31,6 @@ class Visualize:
     ):
         G: nx.Graph = nx.empty_graph( n=0 )
         
-        print(display_type)
-        
         def getPosition (_id):
             y, x = _id // _graph.W, _id % _graph.W
             y = _graph.L-1-y
@@ -53,30 +51,22 @@ class Visualize:
                 2: "lightgreen"
             }.get(( i+j+1 ) % 3)
         
-        # add MLGraphs nodes to networkx graph
+        # add Graphs nodes to networkx graph
         if labelHexagon:
-            G.add_nodes_from( getPosition( id ) for id in range(len(_graph.nodes)) )
-            if display_type == DisplayType.PLAIN:
-                color_map = ["lightgray"  if node is not None else "grey" for node in _graph.nodes]
-            elif display_type == DisplayType.SPIN_FILE:
-                color_map = [getSpinColor(node.spin)  if node is not None else "grey" for node in _graph.nodes]
-            elif display_type == DisplayType.ORDER_PARAMETERS:
-                color_map = [getOrderColor(node.id) if node is not None else "grey" for node in _graph.nodes]
-            else:
-                raise ValueError("Invalid display type")
-            
+            G.add_nodes_from(getPosition(id) for id in range(len(_graph.nodes)))
+            nodes = _graph.nodes
         else:
-            # ignore the hexagon None ndoes
-            G.add_nodes_from( getPosition(node.id) for node in _graph.nodes if node is not None )
-            if display_type == DisplayType.PLAIN:
-                color_map = ["lightgray" for node in _graph.nodes if node is not None]
-            elif display_type == DisplayType.SPIN_FILE:
-                color_map = [getSpinColor(node.spin) for node in _graph.nodes if node is not None]
-            elif display_type == DisplayType.ORDER_PARAMETERS:
-                color_map = [getOrderColor(node.id) for node in _graph.nodes if node is not None]
-            else:
-                raise ValueError("Invalid display type")    
+            nodes = [node for node in _graph.nodes if labelHexagon or node is not None]
+            G.add_nodes_from(getPosition(node.id) for node in nodes)
             
+        if display_type == DisplayType.PLAIN:
+            color_map = ["lightgray" if node is not None else "grey" for node in nodes]
+        elif display_type == DisplayType.SPIN_FILE:
+            color_map = [getSpinColor(node.spin) if node is not None else "grey" for node in nodes]
+        elif display_type == DisplayType.ORDER_PARAMETERS:
+            color_map = [getOrderColor(node.id) if node is not None else "grey" for node in nodes]
+        else:
+            raise ValueError("Invalid display type")
         nodelist = deepcopy(G.nodes()) # using deep copy not shallow copy because nx.network may return reference
         
         def getBondStyle(bondType: BondType, no_color = True) -> tuple[str, str]:
