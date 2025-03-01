@@ -1,8 +1,7 @@
-import sys
+import argparse
 from src.graph import MLGraph
 from src.visualize import Visualize, DisplayType
 from src.node import Spin
-import argparse
 from src.analysis import Analysis
 
 def getFileQubos(inputFile: str):
@@ -35,8 +34,6 @@ def main(arge: argparse.Namespace):
     L:int = 6
     W:int = 6
     
-    # L:int = int(sys.argv[1])
-    # W:int = int(sys.argv[2])
     L:int = args.L
     W:int = args.W
     
@@ -44,8 +41,6 @@ def main(arge: argparse.Namespace):
     graph.makeGraph()
     # graph.bondGraph(3.0, 6.0, 2.0)
     graph.bondGraph(1.0, 1.0, 1.0)
-    # graph.printGraphText()
-    # graph.printGraphVisual()
     
     if args.inputFile is not None:
         results = getFileQubos(args.inputFile)
