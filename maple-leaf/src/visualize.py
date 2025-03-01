@@ -67,6 +67,7 @@ class Visualize:
             color_map = [getOrderColor(node.id) if node is not None else "grey" for node in nodes]
         else:
             raise ValueError("Invalid display type")
+        
         nodelist = deepcopy(G.nodes()) # using deep copy not shallow copy because nx.network may return reference
         
         def getBondStyle(bondType: BondType, no_color = True) -> tuple[str, str]:
