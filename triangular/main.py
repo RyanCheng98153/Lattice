@@ -1,8 +1,8 @@
-import sys
 from src.graph import TrianglularGraph
 from src.visualize import Visualize, DisplayType
 from src.node import Spin
 import argparse
+from src.analysis import Analysis
 
 def getFileQubos(inputFile: str):
     with open(inputFile, "r") as f:
@@ -50,6 +50,10 @@ def main(args: argparse.Namespace):
             if node is not None:
                 spin = Spin.UP if qubos[node.clean_id] == 1 else Spin.DOWN
                 node.spin = spin
+                # print((node.clean_id, node.spin) if node is not None else None)
+        
+        # Analysis.get_triangular_Energy(graph)
+        Analysis.get_ordered_parameters(graph)
 
     # check if the args.display_type match DisplayType's value
     display_type = {
